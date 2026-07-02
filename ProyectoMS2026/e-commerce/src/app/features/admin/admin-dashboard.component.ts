@@ -148,7 +148,7 @@ export class AdminDashboardComponent implements OnInit {
     {
       route: '/admin/pagos',
       title: 'Registrar un pago',
-      description: 'Yape, Plin y tarjeta',
+      description: 'Yape y tarjeta',
       theme: 'blue',
       image: '/images/admin/mod-pagos.png',
     },

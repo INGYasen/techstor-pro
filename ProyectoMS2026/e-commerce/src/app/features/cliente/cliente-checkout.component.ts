@@ -56,7 +56,6 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
   protected readonly longitud = signal<number | null>(null);
   protected readonly metodosPago = METODOS_PAGO;
   protected readonly yapeSlots = [0, 1, 2, 3, 4, 5];
-  protected readonly plinSlots = [0, 1, 2, 3, 4, 5];
   protected readonly checkoutSteps = [
     { n: 1, label: 'Envío' },
     { n: 2, label: 'Pago' },
@@ -84,8 +83,6 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
     cvv: [''],
     yapeCelular: [''],
     yapeCodigo: [''],
-    plinCelular: [''],
-    plinCodigo: [''],
     transferenciaRef: [''],
     aceptaPolitica: [false, Validators.requiredTrue],
   });
@@ -149,14 +146,12 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
     const urls: Record<string, string> = {
       TARJETA: '/images/pago-tarjeta.png',
       YAPE: '/images/pago-yape.png',
-      PLIN: '/images/pago-plin.png',
     };
     return urls[id] ?? null;
   }
 
   iconoMetodoTexto(id: string): string {
     if (id === 'YAPE') return 'Y';
-    if (id === 'PLIN') return 'P';
     if (id === 'TARJETA') return '💳';
     if (id === 'TRANSFERENCIA') return '🏦';
     if (id === 'CONTRA_ENTREGA') return '💵';
@@ -166,7 +161,6 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
   iconoMetodoClase(id: string): string {
     const key = id.toLowerCase();
     if (key === 'yape') return 'metodo-yape';
-    if (key === 'plin') return 'metodo-plin';
     if (key === 'tarjeta') return 'metodo-tarjeta';
     return 'metodo-otro';
   }
@@ -253,17 +247,15 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
     input.value = digits;
   }
 
-  codigoDigitoEn(campo: 'yape' | 'plin', indice: number): string {
-    const codigo =
-      campo === 'yape' ? this.pagoForm.controls.yapeCodigo.value : this.pagoForm.controls.plinCodigo.value;
-    return codigo[indice] ?? '';
+  codigoDigitoEn(indice: number): string {
+    return this.pagoForm.controls.yapeCodigo.value[indice] ?? '';
   }
 
-  onCodigoDigito(campo: 'yape' | 'plin', indice: number, event: Event): void {
+  onCodigoDigito(indice: number, event: Event): void {
     const input = event.target as HTMLInputElement;
     const digito = input.value.replace(/\D/g, '').slice(-1);
     input.value = digito;
-    const control = campo === 'yape' ? this.pagoForm.controls.yapeCodigo : this.pagoForm.controls.plinCodigo;
+    const control = this.pagoForm.controls.yapeCodigo;
     const digitos = control.value.split('');
     while (digitos.length < 6) digitos.push('');
     digitos[indice] = digito;
@@ -274,11 +266,11 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCodigoKeydown(campo: 'yape' | 'plin', indice: number, event: KeyboardEvent): void {
+  onCodigoKeydown(indice: number, event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     if (event.key !== 'Backspace' || input.value || indice === 0) return;
     event.preventDefault();
-    const control = campo === 'yape' ? this.pagoForm.controls.yapeCodigo : this.pagoForm.controls.plinCodigo;
+    const control = this.pagoForm.controls.yapeCodigo;
     const digitos = control.value.split('');
     while (digitos.length < 6) digitos.push('');
     digitos[indice - 1] = '';
@@ -332,17 +324,6 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (metodo === 'PLIN') {
-      if (f.plinCelular.value.replace(/\D/g, '').length < 9) {
-        this.error.set('Ingresa el celular asociado a Plin.');
-        return false;
-      }
-      if (f.plinCodigo.value.length !== 6) {
-        this.error.set('El código de Plin debe tener 6 dígitos.');
-        return false;
-      }
-    }
-
     if (metodo === 'TRANSFERENCIA' && !f.transferenciaRef.value.trim()) {
       this.error.set('Ingresa el número de operación.');
       return false;
@@ -360,9 +341,6 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
     }
     if (metodo === 'YAPE') {
       return `YAPE-${f.yapeCelular.replace(/\D/g, '')}-${f.yapeCodigo}`;
-    }
-    if (metodo === 'PLIN') {
-      return `PLIN-${f.plinCelular.replace(/\D/g, '')}-${f.plinCodigo}`;
     }
     if (metodo === 'TRANSFERENCIA') {
       return f.transferenciaRef.trim();

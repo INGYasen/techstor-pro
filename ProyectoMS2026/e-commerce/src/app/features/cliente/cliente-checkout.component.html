@@ -199,9 +199,9 @@
                   maxlength="1"
                   inputmode="numeric"
                   class="code-digit"
-                  [value]="codigoDigitoEn('yape', i)"
-                  (input)="onCodigoDigito('yape', i, $event)"
-                  (keydown)="onCodigoKeydown('yape', i, $event)"
+                  [value]="codigoDigitoEn(i)"
+                  (input)="onCodigoDigito(i, $event)"
+                  (keydown)="onCodigoKeydown(i, $event)"
                 />
               }
             </div>
@@ -217,38 +217,8 @@
               </ol>
               Tras el pago verás <em>Mercado Pago #ID</em> en la confirmación; búscalo en tu panel de Mercado Pago.
             } @else {
-              Mercado Pago no está configurado en el servidor. Solo están disponibles métodos simulados (Plin, transferencia, contra entrega).
+              Mercado Pago no está configurado en el servidor. Solo están disponibles transferencia y contra entrega.
             }
-          </div>
-        }
-
-        @if (metodoActivo() === 'PLIN') {
-          <div class="method-title">
-            <img src="/images/pago-plin.png" alt="Plin" class="method-title-icon" />
-            <h4>Datos de Plin</h4>
-          </div>
-          <label>
-            Celular asociado a Plin <span class="req">*</span>
-            <input formControlName="plinCelular" placeholder="Ej: 987 123 456" inputmode="tel" />
-          </label>
-          <div class="code-field">
-            <span class="field-label">Código de aprobación <span class="req">*</span></span>
-            <div class="code-boxes" role="group" aria-label="Código de aprobación Plin">
-              @for (i of plinSlots; track i) {
-                <input
-                  type="text"
-                  maxlength="1"
-                  inputmode="numeric"
-                  class="code-digit"
-                  [value]="codigoDigitoEn('plin', i)"
-                  (input)="onCodigoDigito('plin', i, $event)"
-                  (keydown)="onCodigoKeydown('plin', i, $event)"
-                />
-              }
-            </div>
-          </div>
-          <div class="info-box">
-            <strong>Simulación:</strong> Plin no cobra dinero real en esta versión. El pedido se registrará como pagado sin pasar por Mercado Pago.
           </div>
         }
 

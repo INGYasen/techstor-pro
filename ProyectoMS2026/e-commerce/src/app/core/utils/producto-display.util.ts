@@ -50,7 +50,6 @@ export function imagenesProducto(producto: Producto): string[] {
 export const METODOS_PAGO = [
   { id: 'TARJETA', label: 'Tarjeta de crédito o débito', icon: '💳', imagen: '/images/pago-tarjeta.png' },
   { id: 'YAPE', label: 'Yape', icon: '🟣', imagen: '/images/pago-yape.png' },
-  { id: 'PLIN', label: 'Plin', icon: '🟢', imagen: '/images/pago-plin.png' },
   { id: 'TRANSFERENCIA', label: 'Transferencia bancaria', icon: '🏦' },
   { id: 'CONTRA_ENTREGA', label: 'Pago contra entrega', icon: '💵' },
 ] as const;
