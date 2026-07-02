@@ -9,7 +9,19 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const headers: Record<string, string> = {};
   const path = requestPath(req.url);
 
-  if (token && !path.startsWith('/auth/login') && !path.startsWith('/auth/register') && !path.startsWith('/nominatim')) {
+  const isPublicRead =
+    req.method === 'GET' &&
+    (path.startsWith('/api/v1/productos') ||
+      path.startsWith('/api/v1/categorias') ||
+      path.startsWith('/api/v1/pagos/mercadopago/config'));
+
+  if (
+    token &&
+    !isPublicRead &&
+    !path.startsWith('/auth/login') &&
+    !path.startsWith('/auth/register') &&
+    !path.startsWith('/nominatim')
+  ) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
