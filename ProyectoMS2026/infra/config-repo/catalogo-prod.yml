@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: ${PORT:8082}
 
 spring:
   datasource:
@@ -20,9 +20,13 @@ spring:
         format_sql: false
 
 eureka:
+  instance:
+    hostname: ${RENDER_SERVICE_NAME:catalogo}
+    non-secure-port: ${PORT:8082}
+    prefer-ip-address: false
   client:
     service-url:
-      defaultZone: http://registry-server:7081/eureka
+      defaultZone: http://${EUREKA_HOST:registry-server}:${EUREKA_PORT:7081}/eureka
 
 springdoc:
   swagger-ui:

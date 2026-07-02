@@ -12,6 +12,6 @@ WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 8761
+EXPOSE 9122
 
-CMD ["sh", "-c", "java -jar app.jar --server.port=${PORT:-7081}"]
+CMD ["sh", "-c", "java -jar app.jar --server.port=${PORT:-9122}"]

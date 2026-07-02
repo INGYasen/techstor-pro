@@ -1,5 +1,5 @@
 server:
-  port: 9122
+  port: ${PORT:9122}
 
 spring:
   datasource:
@@ -18,9 +18,13 @@ spring:
     show-sql: false
 
 eureka:
+  instance:
+    hostname: ${RENDER_SERVICE_NAME:carrito}
+    non-secure-port: ${PORT:9122}
+    prefer-ip-address: false
   client:
     service-url:
-      defaultZone: http://registry-server:7081/eureka
+      defaultZone: http://${EUREKA_HOST:registry-server}:${EUREKA_PORT:7081}/eureka
 
 springdoc:
   swagger-ui:

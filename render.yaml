@@ -1,0 +1,373 @@
+# Blueprint TechStore Pro — Render
+# Conectar en: https://dashboard.render.com/blueprints → New Blueprint → repo INGYasen/techstor-pro
+#
+# Nota: el stack completo usa varios servicios privados + MySQL.
+# En el plan gratuito de Render puede ser necesario el plan Starter (~USD 7/mes por servicio).
+# Ver DEPLOY-RENDER.md para pasos detallados y costos.
+
+envVarGroups:
+  - name: techstore-secrets
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+
+services:
+  # ─── MySQL (6 bases de datos en una instancia) ───
+  - type: pserv
+    name: techstore-mysql
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/deploy/render/mysql/Dockerfile
+    dockerContext: ProyectoMS2026/deploy/render/mysql
+    disk:
+      name: techstore-mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+
+  # ─── Infraestructura ───
+  - type: pserv
+    name: config-server
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/infra/config-server/Dockerfile.render
+    dockerContext: ProyectoMS2026/infra
+    healthCheckPath: /actuator/health
+
+  - type: pserv
+    name: registry-server
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/infra/registry-server/Dockerfile
+    dockerContext: ProyectoMS2026/infra/registry-server
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CONFIG_SERVER_HOST
+        fromService:
+          name: config-server
+          type: pserv
+          property: host
+      - key: CONFIG_SERVER_PORT
+        fromService:
+          name: config-server
+          type: pserv
+          property: port
+
+  - type: web
+    name: techstore-gateway
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/infra/gateway/Dockerfile
+    dockerContext: ProyectoMS2026/infra/gateway
+    healthCheckPath: /actuator/health
+    envVars:
+      - fromGroup: techstore-secrets
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CONFIG_SERVER_HOST
+        fromService:
+          name: config-server
+          type: pserv
+          property: host
+      - key: CONFIG_SERVER_PORT
+        fromService:
+          name: config-server
+          type: pserv
+          property: port
+      - key: EUREKA_HOST
+        fromService:
+          name: registry-server
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: registry-server
+          type: pserv
+          property: port
+
+  # ─── Microservicios ───
+  - type: pserv
+    name: auth
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/services/auth/Dockerfile
+    dockerContext: ProyectoMS2026/services/auth
+    healthCheckPath: /actuator/health
+    envVars:
+      - fromGroup: techstore-secrets
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CONFIG_SERVER_HOST
+        fromService:
+          name: config-server
+          type: pserv
+          property: host
+      - key: CONFIG_SERVER_PORT
+        fromService:
+          name: config-server
+          type: pserv
+          property: port
+      - key: EUREKA_HOST
+        fromService:
+          name: registry-server
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: registry-server
+          type: pserv
+          property: port
+      - key: AUTH_DB_HOST
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          property: host
+      - key: AUTH_DB_PORT
+        value: "3306"
+      - key: AUTH_DB_NAME
+        value: db_auth
+      - key: AUTH_DB_USERNAME
+        value: root
+      - key: AUTH_DB_PASSWORD
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          envVarKey: MYSQL_ROOT_PASSWORD
+
+  - type: pserv
+    name: catalogo
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/services/catalogo/Dockerfile
+    dockerContext: ProyectoMS2026/services/catalogo
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CONFIG_SERVER_HOST
+        fromService:
+          name: config-server
+          type: pserv
+          property: host
+      - key: CONFIG_SERVER_PORT
+        fromService:
+          name: config-server
+          type: pserv
+          property: port
+      - key: EUREKA_HOST
+        fromService:
+          name: registry-server
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: registry-server
+          type: pserv
+          property: port
+      - key: CATALOGO_DB_HOST
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          property: host
+      - key: CATALOGO_DB_PORT
+        value: "3306"
+      - key: CATALOGO_DB_NAME
+        value: db_catalogo
+      - key: CATALOGO_DB_USERNAME
+        value: root
+      - key: CATALOGO_DB_PASSWORD
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          envVarKey: MYSQL_ROOT_PASSWORD
+
+  - type: pserv
+    name: producto
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/services/producto/Dockerfile
+    dockerContext: ProyectoMS2026/services/producto
+    healthCheckPath: /actuator/health
+    envVars:
+      - fromGroup: techstore-secrets
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CONFIG_SERVER_HOST
+        fromService:
+          name: config-server
+          type: pserv
+          property: host
+      - key: CONFIG_SERVER_PORT
+        fromService:
+          name: config-server
+          type: pserv
+          property: port
+      - key: EUREKA_HOST
+        fromService:
+          name: registry-server
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: registry-server
+          type: pserv
+          property: port
+      - key: PRODUCTO_DB_HOST
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          property: host
+      - key: PRODUCTO_DB_PORT
+        value: "3306"
+      - key: PRODUCTO_DB_NAME
+        value: db_producto
+      - key: PRODUCTO_DB_USERNAME
+        value: root
+      - key: PRODUCTO_DB_PASSWORD
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          envVarKey: MYSQL_ROOT_PASSWORD
+
+  - type: pserv
+    name: pedido
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/services/pedido/Dockerfile
+    dockerContext: ProyectoMS2026/services/pedido
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CONFIG_SERVER_HOST
+        fromService:
+          name: config-server
+          type: pserv
+          property: host
+      - key: CONFIG_SERVER_PORT
+        fromService:
+          name: config-server
+          type: pserv
+          property: port
+      - key: EUREKA_HOST
+        fromService:
+          name: registry-server
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: registry-server
+          type: pserv
+          property: port
+      - key: PEDIDO_DB_HOST
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          property: host
+      - key: PEDIDO_DB_PORT
+        value: "3306"
+      - key: PEDIDO_DB_NAME
+        value: db_pedido
+      - key: PEDIDO_DB_USERNAME
+        value: root
+      - key: PEDIDO_DB_PASSWORD
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          envVarKey: MYSQL_ROOT_PASSWORD
+
+  - type: pserv
+    name: pago
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/services/pago/Dockerfile
+    dockerContext: ProyectoMS2026/services/pago
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CONFIG_SERVER_HOST
+        fromService:
+          name: config-server
+          type: pserv
+          property: host
+      - key: CONFIG_SERVER_PORT
+        fromService:
+          name: config-server
+          type: pserv
+          property: port
+      - key: EUREKA_HOST
+        fromService:
+          name: registry-server
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: registry-server
+          type: pserv
+          property: port
+      - key: PAGO_DB_HOST
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          property: host
+      - key: PAGO_DB_PORT
+        value: "3306"
+      - key: PAGO_DB_NAME
+        value: db_pago
+      - key: PAGO_DB_USERNAME
+        value: root
+      - key: PAGO_DB_PASSWORD
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          envVarKey: MYSQL_ROOT_PASSWORD
+      - key: MERCADOPAGO_ENABLED
+        value: "true"
+      - key: MP_PUBLIC_KEY
+        sync: false
+      - key: MP_ACCESS_TOKEN
+        sync: false
+      - key: MP_PAYER_EMAIL
+        sync: false
+
+  - type: pserv
+    name: carrito
+    runtime: docker
+    dockerfilePath: ProyectoMS2026/services/carrito/Dockerfile
+    dockerContext: ProyectoMS2026/services/carrito
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CONFIG_SERVER_HOST
+        fromService:
+          name: config-server
+          type: pserv
+          property: host
+      - key: CONFIG_SERVER_PORT
+        fromService:
+          name: config-server
+          type: pserv
+          property: port
+      - key: EUREKA_HOST
+        fromService:
+          name: registry-server
+          type: pserv
+          property: host
+      - key: EUREKA_PORT
+        fromService:
+          name: registry-server
+          type: pserv
+          property: port
+      - key: CARRITO_DB_HOST
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          property: host
+      - key: CARRITO_DB_PORT
+        value: "3306"
+      - key: CARRITO_DB_NAME
+        value: db_carrito
+      - key: CARRITO_DB_USERNAME
+        value: root
+      - key: CARRITO_DB_PASSWORD
+        fromService:
+          name: techstore-mysql
+          type: pserv
+          envVarKey: MYSQL_ROOT_PASSWORD

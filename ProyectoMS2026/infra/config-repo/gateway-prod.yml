@@ -1,3 +1,6 @@
+server:
+  port: ${PORT:7091}
+
 spring:
   cloud:
     gateway:
@@ -55,9 +58,13 @@ spring:
             - Path=/api/v1/carrito/instancia
 
 eureka:
+  instance:
+    hostname: ${RENDER_SERVICE_NAME:gateway}
+    non-secure-port: ${PORT:7091}
+    prefer-ip-address: false
   client:
     service-url:
-      defaultZone: http://registry-server:7081/eureka
+      defaultZone: http://${EUREKA_HOST:registry-server}:${EUREKA_PORT:7081}/eureka
 
 jwt:
   secret: ${JWT_SECRET}
