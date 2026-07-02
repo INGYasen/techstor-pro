@@ -4,6 +4,9 @@
 !.env.example
 **/.env
 !**/.env.example
+**/.env.mercadopago
+!**/.env.mercadopago.example
+**/mercadopago-render.env
 
 # Dependencias y builds
 **/node_modules/

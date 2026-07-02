@@ -1,75 +1,78 @@
-# Configura credenciales Mercado Pago en pago-dev.yml (sin usar la app movil)
-# Uso: .\scripts\configurar-mercadopago.ps1
+# Configura credenciales Mercado Pago en infra/.env.mercadopago (no se sube a Git)
+# Uso:
+#   .\scripts\configurar-mercadopago.ps1
+#   .\scripts\configurar-mercadopago.ps1 -PublicKey "APP_USR-..." -AccessToken "APP_USR-..." -Email "tu@email.com"
+
+param(
+    [string]$PublicKey = "",
+    [string]$AccessToken = "",
+    [string]$Email = ""
+)
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path $PSScriptRoot -Parent
-$configFile = Join-Path $root "infra\config-repo\pago-dev.yml"
-
-$publicKeyDefault = "TEST-a33e02fc-0cdc-4e8f-aa7f-928042999764"
+$envFile = Join-Path $root "infra\.env.mercadopago"
+$exampleFile = Join-Path $root "infra\.env.mercadopago.example"
 
 Write-Host ""
 Write-Host "=== Configurar Mercado Pago (TechStore) ===" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "Si la app de MP se congela, abre en el PC (Chrome):"
+Write-Host "Panel de desarrolladores (PC):"
 Write-Host "  https://www.mercadopago.com.pe/developers/panel/app" -ForegroundColor Yellow
-Write-Host "  -> TechStoreOnline -> Credenciales de prueba -> Access Token (ojo + copiar)"
 Write-Host ""
 
-$publicKey = Read-Host "Public Key [Enter = ya configurada]"
-if ([string]::IsNullOrWhiteSpace($publicKey)) {
-    $publicKey = $publicKeyDefault
+if ([string]::IsNullOrWhiteSpace($PublicKey)) {
+    $PublicKey = Read-Host "Public Key (APP_USR-... o TEST-...)"
+}
+if ([string]::IsNullOrWhiteSpace($AccessToken)) {
+    Write-Host "Pega el Access Token completo." -ForegroundColor Gray
+    $AccessToken = Read-Host "Access Token"
+}
+if ([string]::IsNullOrWhiteSpace($Email)) {
+    $Email = Read-Host "Email pagador [Enter = comprador@techstore.pe]"
 }
 
-Write-Host ""
-Write-Host "Pega el Access Token completo (empieza con TEST-)." -ForegroundColor Gray
-Write-Host "Tip: clic derecho en PowerShell para pegar." -ForegroundColor Gray
-$accessToken = Read-Host "Access Token"
+$PublicKey = $PublicKey.Trim()
+$AccessToken = $AccessToken.Trim()
+$Email = if ([string]::IsNullOrWhiteSpace($Email)) { "comprador@techstore.pe" } else { $Email.Trim() }
 
-if ([string]::IsNullOrWhiteSpace($accessToken)) {
-    Write-Host "Error: Access Token vacio." -ForegroundColor Red
+if ([string]::IsNullOrWhiteSpace($PublicKey) -or [string]::IsNullOrWhiteSpace($AccessToken)) {
+    Write-Host "Error: Public Key y Access Token son obligatorios." -ForegroundColor Red
     exit 1
 }
 
-$accessToken = $accessToken.Trim()
-if (-not $accessToken.StartsWith("TEST-")) {
-    Write-Host "Advertencia: el token de prueba suele empezar con TEST-" -ForegroundColor Yellow
+if ($PublicKey.StartsWith("APP_USR-")) {
+    Write-Host "Modo: PRODUCCION (cobros reales)." -ForegroundColor Yellow
+} elseif ($PublicKey.StartsWith("TEST-")) {
+    Write-Host "Modo: PRUEBA (sandbox)." -ForegroundColor Cyan
+} else {
+    Write-Host "Advertencia: la clave no parece de Mercado Pago." -ForegroundColor Yellow
 }
 
-$email = Read-Host "Email pagador [Enter = test@test.com]"
-if ([string]::IsNullOrWhiteSpace($email)) {
-    $email = "test@test.com"
-}
-
-if (-not (Test-Path $configFile)) {
-    Write-Host "No se encontro: $configFile" -ForegroundColor Red
-    exit 1
-}
-
-$content = Get-Content $configFile -Raw
-$content = $content -replace '(?ms)^mercadopago:\s*\r?\n(?:  .+\r?\n)+', ''
-
-$block = @"
-mercadopago:
-  enabled: true
-  public-key: $publicKey
-  access-token: $accessToken
-  payer-email: $email
+$content = @"
+# Credenciales Mercado Pago — NO subir a Git
+MERCADOPAGO_ENABLED=true
+MP_PUBLIC_KEY=$PublicKey
+MP_ACCESS_TOKEN=$AccessToken
+MP_PAYER_EMAIL=$Email
 "@
 
-if (-not $content.EndsWith("`n")) {
-    $content += "`n"
+Set-Content -Path $envFile -Value $content.TrimEnd() -Encoding UTF8
+
+if (-not (Test-Path $exampleFile)) {
+    Copy-Item $envFile $exampleFile
+    (Get-Content $exampleFile) `
+        -replace 'APP_USR-[^`r`n]+', 'APP_USR-tu-public-key' `
+        -replace 'MP_ACCESS_TOKEN=.*', 'MP_ACCESS_TOKEN=APP_USR-tu-access-token' `
+        -replace 'MP_PAYER_EMAIL=.*', 'MP_PAYER_EMAIL=email-del-comprador@ejemplo.com' |
+        Set-Content $exampleFile -Encoding UTF8
 }
-$content += "`n$block`n"
-
-Set-Content -Path $configFile -Value $content.TrimEnd() -Encoding UTF8
 
 Write-Host ""
-Write-Host "Listo. Credenciales guardadas en pago-dev.yml" -ForegroundColor Green
+Write-Host "Listo. Credenciales guardadas en infra\.env.mercadopago" -ForegroundColor Green
 Write-Host ""
-Write-Host "Ahora reinicia:" -ForegroundColor Cyan
-Write-Host "  1. config-server (7071)"
-Write-Host "  2. microservicio pago (9111)"
-Write-Host ""
-Write-Host "Verifica: http://localhost:7091/api/v1/pagos/mercadopago/config"
-Write-Host "Prueba Yape: celular 111111111 / codigo 123456"
+Write-Host "Siguiente paso:" -ForegroundColor Cyan
+Write-Host "  1. . .\scripts\cargar-env-mercadopago.ps1"
+Write-Host "  2. Reinicia config-server (7071) y pago (9111)"
+Write-Host "  3. Verifica: http://localhost:7091/api/v1/pagos/mercadopago/config"
 Write-Host ""

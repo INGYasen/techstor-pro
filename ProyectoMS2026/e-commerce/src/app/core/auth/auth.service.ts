@@ -108,6 +108,10 @@ export class AuthService {
     return this.session()?.username ?? null;
   }
 
+  getEmail(): string | null {
+    return this.session()?.email ?? this.getPerfilSemilla()?.email ?? null;
+  }
+
   getRoles(): string[] {
     return this.session()?.roles ?? [];
   }

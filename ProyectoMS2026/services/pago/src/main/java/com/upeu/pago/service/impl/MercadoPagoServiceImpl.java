@@ -103,7 +103,7 @@ public class MercadoPagoServiceImpl implements MercadoPagoService {
 	private void validarConfiguracion() {
 		if (!properties.isConfigured()) {
 			throw new IllegalStateException(
-					"Mercado Pago no está configurado. Define las credenciales TEST en pago-dev.yml");
+					"Mercado Pago no está configurado. Define MP_PUBLIC_KEY, MP_ACCESS_TOKEN y MERCADOPAGO_ENABLED=true");
 		}
 	}
 

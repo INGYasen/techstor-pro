@@ -407,11 +407,18 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
     this.confirmarCompraSimulado(cartItems, metodo);
   }
 
+  private resolverPayerEmail(): string {
+    const email = this.auth.getEmail()?.trim();
+    if (email) return email;
+    const username = this.auth.getUsername();
+    return username ? `${username}@techstore.com` : 'comprador@techstore.com';
+  }
+
   private confirmarCompraYape(cartItems: ReturnType<CartService['getItems']>): void {
     const mp = this.mpConfig();
     if (!mp?.enabled || !mp.publicKey) {
       this.error.set(
-        'Yape con cobro real requiere configurar Mercado Pago (credenciales TEST). Revisa Guia.txt.',
+        'Yape con cobro real requiere Mercado Pago configurado en el backend. Contacta al administrador.',
       );
       this.processing.set(false);
       this.step.set(2);
@@ -438,7 +445,11 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
         switchMap((token) =>
           this.pedidoService.crear(pedidoPayload).pipe(
             switchMap((pedido) =>
-              this.pagoService.cobrarYapeMercadoPago({ idPedido: pedido.id, token }).pipe(
+              this.pagoService.cobrarYapeMercadoPago({
+                idPedido: pedido.id,
+                token,
+                payerEmail: this.resolverPayerEmail(),
+              }).pipe(
                 switchMap((mpRes) => {
                   if (!mpRes.approved) {
                     throw new Error(mpRes.message || 'El pago con Yape no fue aprobado.');
@@ -466,7 +477,7 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
     const mp = this.mpConfig();
     if (!mp?.enabled || !mp.publicKey) {
       this.error.set(
-        'Pago con tarjeta requiere configurar Mercado Pago (credenciales TEST). Revisa Guia.txt.',
+        'Pago con tarjeta requiere Mercado Pago configurado en el backend. Contacta al administrador.',
       );
       this.processing.set(false);
       this.step.set(2);
@@ -506,6 +517,7 @@ export class ClienteCheckoutComponent implements OnInit, OnDestroy {
                   token,
                   paymentMethodId,
                   installments: 1,
+                  payerEmail: this.resolverPayerEmail(),
                 })
                 .pipe(
                   switchMap((mpRes) => {

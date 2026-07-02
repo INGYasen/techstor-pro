@@ -51,7 +51,7 @@ management:
         enabled: true
 
 mercadopago:
-  enabled: true
-  public-key: TEST-a33e02fc-0cdc-4e8f-aa7f-928042999764
-  access-token: TEST-7750784071978501-070210-516fbed71d6ffcfdc96def969983e6ea-1243188811
-  payer-email: test_user_pe@testuser.com
+  enabled: ${MERCADOPAGO_ENABLED:true}
+  public-key: ${MP_PUBLIC_KEY:}
+  access-token: ${MP_ACCESS_TOKEN:}
+  payer-email: ${MP_PAYER_EMAIL:}

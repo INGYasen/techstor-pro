@@ -174,9 +174,9 @@
           </div>
           <p class="secure-note">
             @if (mpConfig()?.enabled) {
-              🔒 Pago real con tarjeta vía Mercado Pago. En prueba usa: 5031 4332 1540 6351, titular <strong>APRO</strong>, venc. 11/30, CVV 123.
+              🔒 Pago real con tarjeta vía Mercado Pago. El cargo se procesa al confirmar tu compra.
             } @else {
-              🔒 Simulación — configura Mercado Pago para cobro real con tarjeta.
+              🔒 Tarjeta no disponible hasta que Mercado Pago esté configurado en el servidor.
             }
           </p>
         }
@@ -217,7 +217,7 @@
               </ol>
               Tras el pago verás <em>Mercado Pago #ID</em> en la confirmación; búscalo en tu panel de Mercado Pago.
             } @else {
-              Configura credenciales Mercado Pago TEST en el backend para habilitar cobro real (ver Guia.txt).
+              Mercado Pago no está configurado en el servidor. Solo están disponibles métodos simulados (Plin, transferencia, contra entrega).
             }
           </div>
         }
@@ -246,6 +246,9 @@
                 />
               }
             </div>
+          </div>
+          <div class="info-box">
+            <strong>Simulación:</strong> Plin no cobra dinero real en esta versión. El pedido se registrará como pagado sin pasar por Mercado Pago.
           </div>
         }
 
