@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd ProyectoMS2026/e-commerce && npm ci && npm run build",
+  "outputDirectory": "ProyectoMS2026/e-commerce/dist/e-commerce/browser",
+  "installCommand": "cd ProyectoMS2026/e-commerce && npm ci",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/((?!.*\\.).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
