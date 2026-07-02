@@ -32,14 +32,12 @@ services:
     runtime: docker
     dockerfilePath: ProyectoMS2026/infra/config-server/Dockerfile.render
     dockerContext: ProyectoMS2026/infra
-    healthCheckPath: /actuator/health
 
   - type: pserv
     name: registry-server
     runtime: docker
     dockerfilePath: ProyectoMS2026/infra/registry-server/Dockerfile
     dockerContext: ProyectoMS2026/infra/registry-server
-    healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -91,7 +89,6 @@ services:
     runtime: docker
     dockerfilePath: ProyectoMS2026/services/auth/Dockerfile
     dockerContext: ProyectoMS2026/services/auth
-    healthCheckPath: /actuator/health
     envVars:
       - fromGroup: techstore-secrets
       - key: SPRING_PROFILES_ACTIVE
@@ -138,7 +135,6 @@ services:
     runtime: docker
     dockerfilePath: ProyectoMS2026/services/catalogo/Dockerfile
     dockerContext: ProyectoMS2026/services/catalogo
-    healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -184,7 +180,6 @@ services:
     runtime: docker
     dockerfilePath: ProyectoMS2026/services/producto/Dockerfile
     dockerContext: ProyectoMS2026/services/producto
-    healthCheckPath: /actuator/health
     envVars:
       - fromGroup: techstore-secrets
       - key: SPRING_PROFILES_ACTIVE
@@ -231,7 +226,6 @@ services:
     runtime: docker
     dockerfilePath: ProyectoMS2026/services/pedido/Dockerfile
     dockerContext: ProyectoMS2026/services/pedido
-    healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -277,7 +271,6 @@ services:
     runtime: docker
     dockerfilePath: ProyectoMS2026/services/pago/Dockerfile
     dockerContext: ProyectoMS2026/services/pago
-    healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
@@ -331,7 +324,6 @@ services:
     runtime: docker
     dockerfilePath: ProyectoMS2026/services/carrito/Dockerfile
     dockerContext: ProyectoMS2026/services/carrito
-    healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
