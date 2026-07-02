@@ -1,0 +1,14 @@
+ALTER TABLE users
+    ADD COLUMN nombres VARCHAR(80) NULL,
+    ADD COLUMN apellidos VARCHAR(120) NULL,
+    ADD COLUMN dni VARCHAR(8) NULL,
+    ADD COLUMN fecha_nacimiento DATE NULL,
+    ADD COLUMN sexo VARCHAR(20) NULL,
+    ADD COLUMN telefono VARCHAR(20) NULL,
+    ADD COLUMN pais VARCHAR(80) NULL,
+    ADD COLUMN departamento VARCHAR(80) NULL,
+    ADD COLUMN provincia VARCHAR(80) NULL,
+    ADD COLUMN distrito VARCHAR(80) NULL,
+    ADD COLUMN codigo_postal VARCHAR(12) NULL,
+    ADD COLUMN direccion VARCHAR(255) NULL,
+    ADD COLUMN referencia VARCHAR(255) NULL;

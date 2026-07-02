@@ -1,0 +1,114 @@
+<section class="cliente-page cart-page">
+  <header class="page-hero">
+    <div>
+      <h1>Carrito de compras</h1>
+      <p>{{ items().length }} producto{{ items().length === 1 ? '' : 's' }} en tu carrito</p>
+    </div>
+    @if (items().length) {
+      <a routerLink="/catalogo" class="btn outline">Seguir comprando</a>
+    }
+  </header>
+
+  @if (success()) {
+    <div class="alert success">{{ success() }}</div>
+  }
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  @if (!items().length) {
+    <div class="empty-box">
+      <div class="empty-icon">🛒</div>
+      <h3>Tu carrito está vacío</h3>
+      <p>Explora el catálogo y agrega productos para continuar con tu compra.</p>
+      <a routerLink="/catalogo" class="btn primary">Ver productos</a>
+    </div>
+  } @else {
+    <div class="cart-layout">
+      <div class="cart-items-card">
+        <h3>Productos</h3>
+        <div class="cart-table">
+          <div class="cart-table-head">
+            <span>Producto</span>
+            <span>Precio</span>
+            <span>Total</span>
+            <span></span>
+          </div>
+          @for (item of items(); track item.producto.id) {
+            <div class="cart-table-row">
+              <div class="product-cell">
+                <strong>{{ item.producto.nombre }}</strong>
+                <span>{{ item.cantidad }} unidad{{ item.cantidad === 1 ? '' : 'es' }}</span>
+              </div>
+              <span class="price-cell">S/ {{ item.producto.precio | number: '1.2-2' }}</span>
+              <span class="price-cell total-cell">S/ {{ item.producto.precio * item.cantidad | number: '1.2-2' }}</span>
+              <button type="button" class="btn danger sm" (click)="quitar(item.producto.id)">Quitar</button>
+            </div>
+          }
+        </div>
+        <div class="cart-summary">
+          <span>Total del carrito</span>
+          <strong>S/ {{ total() | number: '1.2-2' }}</strong>
+        </div>
+      </div>
+
+      <form class="checkout-card" [formGroup]="checkoutForm" (ngSubmit)="confirmarPedido()">
+        <h3>Datos de envío</h3>
+        <p class="checkout-hint">Completa la dirección para confirmar tu pedido.</p>
+
+        <div class="address-field">
+          <label for="direccionEnvio">Dirección</label>
+          <div class="address-input-wrap">
+            <input
+              id="direccionEnvio"
+              formControlName="direccionEnvio"
+              type="text"
+              placeholder="Ej: Av. Larco, Miraflores..."
+              autocomplete="off"
+              (focus)="onDireccionFocus()"
+              (blur)="onDireccionBlur()"
+              (keydown)="onDireccionKeydown($event)"
+            />
+
+            @if (mostrarSugerencias()) {
+              <div class="address-dropdown">
+                @if (buscandoDireccion()) {
+                  <div class="address-dropdown-item muted">Buscando direcciones...</div>
+                } @else if (sinResultados()) {
+                  <div class="address-dropdown-item muted">No se encontraron direcciones</div>
+                } @else {
+                  <ul class="address-suggestions" role="listbox">
+                    @for (sugerencia of sugerencias(); track sugerencia.place_id; let i = $index) {
+                      <li
+                        role="option"
+                        [class.active]="i === indiceActivo()"
+                        (mousedown)="seleccionarDireccion(sugerencia)"
+                      >
+                        {{ sugerencia.display_name }}
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          </div>
+          <small class="address-attr">Autocompletado con OpenStreetMap · Usa ↑ ↓ y Enter</small>
+        </div>
+
+        <label>
+          Observación (opcional)
+          <input formControlName="observacion" placeholder="Indicaciones para la entrega" />
+        </label>
+
+        <div class="checkout-total">
+          <span>Total a pagar</span>
+          <strong>S/ {{ total() | number: '1.2-2' }}</strong>
+        </div>
+
+        <button type="submit" class="btn primary checkout-btn" [disabled]="processing()">
+          {{ processing() ? 'Procesando...' : 'Confirmar pedido' }}
+        </button>
+      </form>
+    </div>
+  }
+</section>

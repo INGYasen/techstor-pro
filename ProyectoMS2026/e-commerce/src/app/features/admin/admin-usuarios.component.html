@@ -1,0 +1,165 @@
+<section class="usuarios-page">
+  <header class="page-top">
+    <div>
+      <h1>Gestionar Usuarios</h1>
+      <nav class="breadcrumb" aria-label="Ruta">
+        <a routerLink="/admin">Inicio</a>
+        <span>/</span>
+        <span>Usuarios</span>
+      </nav>
+    </div>
+    <button type="button" class="btn primary add-btn" (click)="abrirNuevo()">+ Agregar Usuario</button>
+  </header>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+  @if (error() && !modalAbierto()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  <div class="toolbar">
+    <label class="search-box">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input
+        type="search"
+        placeholder="Buscar usuarios..."
+        [value]="busqueda()"
+        (input)="onBusqueda($event)"
+      />
+    </label>
+
+    <select class="role-filter" [value]="filtroRol()" (change)="onFiltroRol($event)">
+      <option value="TODOS">Todos los roles</option>
+      <option value="ADMIN">Administrador</option>
+      <option value="USER">Cliente</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    @if (loading()) {
+      <p class="loading-text">Cargando usuarios...</p>
+    } @else if (!usuariosFiltrados().length) {
+      <p class="loading-text">No hay usuarios que coincidan con la búsqueda.</p>
+    } @else {
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo Electrónico</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (usuario of usuariosFiltrados(); track usuario.id) {
+            <tr>
+              <td class="col-id">{{ usuario.id }}</td>
+              <td>
+                <div class="user-cell">
+                  <span class="avatar">{{ iniciales(usuario.nombreCompleto) }}</span>
+                  <div>
+                    <strong>{{ usuario.nombreCompleto }}</strong>
+                    <small>{{ rolEtiqueta(usuario.roles) }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>{{ usuario.email }}</td>
+              <td>
+                <span class="badge role" [class]="rolClase(usuario.roles)">
+                  {{ rolEtiqueta(usuario.roles) }}
+                </span>
+              </td>
+              <td>
+                <span class="badge status" [class.inactive]="!usuario.enabled">
+                  <span class="dot"></span>
+                  {{ usuario.enabled ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <button
+                    type="button"
+                    class="icon-btn edit"
+                    title="Editar"
+                    (click)="abrirEditar(usuario)"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    type="button"
+                    class="icon-btn delete"
+                    title="Eliminar"
+                    (click)="eliminar(usuario)"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</section>
+
+@if (modalAbierto()) {
+  <div class="modal-backdrop" (click)="cerrarModal()"></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <header class="modal-header">
+      <h2 id="modal-title">{{ editando() ? 'Editar usuario' : 'Agregar usuario' }}</h2>
+      <button type="button" class="close-btn" (click)="cerrarModal()" aria-label="Cerrar">×</button>
+    </header>
+
+    @if (error()) {
+      <div class="alert error">{{ error() }}</div>
+    }
+
+    <form class="modal-form" [formGroup]="form" (ngSubmit)="guardar()">
+      <label>
+        Usuario
+        <input formControlName="username" [readonly]="!!editando()" />
+      </label>
+
+      <label>
+        Nombre completo
+        <input formControlName="nombreCompleto" />
+      </label>
+
+      <label>
+        Correo electrónico
+        <input type="email" formControlName="email" />
+      </label>
+
+      <div class="row">
+        <label>
+          Rol
+          <select formControlName="role">
+            <option value="USER">Cliente</option>
+            <option value="ADMIN">Administrador</option>
+          </select>
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" formControlName="enabled" />
+          Usuario activo
+        </label>
+      </div>
+
+      <label>
+        {{ editando() ? 'Nueva contraseña (opcional)' : 'Contraseña' }}
+        <input type="password" formControlName="password" autocomplete="new-password" />
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" class="btn outline" (click)="cerrarModal()">Cancelar</button>
+        <button type="submit" class="btn primary" [disabled]="saving()">
+          {{ saving() ? 'Guardando...' : (editando() ? 'Guardar cambios' : 'Crear usuario') }}
+        </button>
+      </div>
+    </form>
+  </div>
+}

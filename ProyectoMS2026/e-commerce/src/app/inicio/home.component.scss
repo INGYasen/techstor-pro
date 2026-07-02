@@ -1,0 +1,208 @@
+.home-welcome {
+  position: relative;
+  min-height: min(88vh, 720px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.welcome-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.welcome-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(105deg, rgba(6, 11, 22, 0.92) 0%, rgba(6, 11, 22, 0.75) 42%, rgba(6, 11, 22, 0.35) 100%),
+    linear-gradient(180deg, transparent 60%, rgba(6, 11, 22, 0.95) 100%);
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem clamp(1.25rem, 3vw, 3rem);
+
+  h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    line-height: 1.12;
+    color: #fff;
+    font-weight: 800;
+    max-width: 520px;
+
+    .accent {
+      color: #3b82f6;
+    }
+  }
+
+  > p {
+    margin: 0 0 2rem;
+    color: rgba(226, 232, 240, 0.88);
+    font-size: 1.05rem;
+    max-width: 460px;
+    line-height: 1.6;
+  }
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.35rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &.primary {
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+  }
+
+  &.outline {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(148, 163, 184, 0.35);
+  }
+}
+
+.brands-section {
+  padding: 2.5rem clamp(1.25rem, 3vw, 3rem) 2rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.brands-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  color: #93c5fd;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.brands-section h2 {
+  margin: 0 0 2rem;
+  color: #fff;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+}
+
+.brands-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: center;
+}
+
+.brand-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 96px;
+  padding: 1rem 0.75rem;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(148, 163, 184, 0.22);
+  }
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  color: rgba(248, 250, 252, 0.92);
+
+  svg {
+    height: 26px;
+    width: auto;
+  }
+}
+
+.brand-wordmark {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+
+  &.italic {
+    font-style: italic;
+    letter-spacing: 0.12em;
+  }
+
+  &.msi {
+    color: #ef4444;
+    font-weight: 800;
+  }
+}
+
+.brand-samsung .brand-wordmark {
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+}
+
+.brand-lenovo .brand-wordmark,
+.brand-logitech .brand-wordmark {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+
+.brand-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(148, 163, 184, 0.85);
+}
+
+@media (max-width: 900px) {
+  .home-welcome {
+    min-height: auto;
+  }
+
+  .brands-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .brands-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

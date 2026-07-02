@@ -1,0 +1,175 @@
+<section class="cliente-page cliente-perfil-page">
+  <header class="page-hero perfil-hero">
+    <div class="perfil-hero-text">
+      <p class="perfil-kicker">Cuenta</p>
+      <h1>Mi perfil</h1>
+      <p>Administra tu información personal, contacto y dirección de envío.</p>
+    </div>
+    @if (!loading() && auth.getUsername(); as user) {
+      <div class="user-badge">
+        <span class="user-badge-icon" aria-hidden="true">👤</span>
+        <span>{{ user }}</span>
+      </div>
+    }
+  </header>
+
+  @if (offlineMode() && !loading()) {
+    <div class="alert warn">
+      <span aria-hidden="true">ℹ️</span>
+      <div>
+        @if (auth.tieneDatosRegistro()) {
+          <strong>Datos de tu cuenta cargados</strong>
+          <p>Tus nombres y correo del registro ya están aquí. El resto puedes completarlo y guardar en este navegador.</p>
+        } @else {
+          <strong>Modo local activo</strong>
+          <p>Tus datos se guardan en este navegador hasta que el servidor de perfil esté disponible.</p>
+        }
+      </div>
+      <button type="button" class="link-btn" (click)="reintentar()">Reintentar</button>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert error">
+      <span aria-hidden="true">⚠️</span>
+      <div>
+        <p>{{ error() }}</p>
+        <button type="button" class="link-btn" (click)="reintentar()">Reintentar conexión</button>
+      </div>
+    </div>
+  }
+
+  @if (success()) {
+    <div class="alert success">
+      <span aria-hidden="true">✓</span>
+      Tus cambios se guardaron correctamente.
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="perfil-skeleton">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-photo"></div>
+    </div>
+  } @else {
+    <div class="perfil-grid">
+      <form class="perfil-form-card" [formGroup]="form" (ngSubmit)="guardar()">
+        <div class="form-section">
+          <h2><span class="section-icon" aria-hidden="true">👤</span> Datos personales</h2>
+          <div class="field-row two-cols">
+            <label class="field" [class.invalid]="campoInvalido('nombres')">
+              <span>Nombres <em>*</em></span>
+              <input type="text" formControlName="nombres" autocomplete="given-name" placeholder="Ej. María" />
+            </label>
+            <label class="field" [class.invalid]="campoInvalido('apellidos')">
+              <span>Apellidos</span>
+              <input type="text" formControlName="apellidos" autocomplete="family-name" placeholder="Ej. López" />
+            </label>
+          </div>
+
+          <div class="field-row three-cols">
+            <label class="field" [class.invalid]="campoInvalido('dni')">
+              <span>DNI <em>*</em></span>
+              <input type="text" formControlName="dni" maxlength="8" inputmode="numeric" placeholder="8 dígitos" />
+            </label>
+            <label class="field">
+              <span>Fecha de nacimiento</span>
+              <input type="date" formControlName="fechaNacimiento" />
+            </label>
+            <label class="field">
+              <span>Sexo</span>
+              <select formControlName="sexo">
+                <option value="">Seleccionar</option>
+                @for (opcion of sexoOptions; track opcion) {
+                  <option [value]="opcion">{{ opcion }}</option>
+                }
+              </select>
+            </label>
+          </div>
+
+          <div class="field-row two-cols">
+            <label class="field" [class.invalid]="campoInvalido('telefono')">
+              <span>Teléfono <em>*</em></span>
+              <input type="tel" formControlName="telefono" autocomplete="tel" placeholder="Ej. 987 654 321" />
+            </label>
+            <label class="field" [class.invalid]="campoInvalido('email')">
+              <span>Correo electrónico <em>*</em></span>
+              <input type="email" formControlName="email" autocomplete="email" placeholder="correo@ejemplo.com" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2><span class="section-icon" aria-hidden="true">📍</span> Dirección</h2>
+          <div class="field-row four-cols">
+            <label class="field" [class.invalid]="campoInvalido('pais')">
+              <span>País <em>*</em></span>
+              <select formControlName="pais">
+                <option value="Perú">Perú</option>
+              </select>
+            </label>
+            <label class="field" [class.invalid]="campoInvalido('departamento')">
+              <span>Departamento <em>*</em></span>
+              <select formControlName="departamento">
+                <option value="">Seleccionar</option>
+                @for (dep of departamentos; track dep) {
+                  <option [value]="dep">{{ dep }}</option>
+                }
+              </select>
+            </label>
+            <label class="field" [class.invalid]="campoInvalido('provincia')">
+              <span>Provincia <em>*</em></span>
+              <input type="text" formControlName="provincia" placeholder="Ej. San Román" />
+            </label>
+            <label class="field" [class.invalid]="campoInvalido('distrito')">
+              <span>Distrito <em>*</em></span>
+              <input type="text" formControlName="distrito" placeholder="Ej. Puno" />
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Código postal</span>
+              <input type="text" formControlName="codigoPostal" placeholder="Opcional" />
+            </label>
+          </div>
+
+          <label class="field full" [class.invalid]="campoInvalido('direccion')">
+            <span>Dirección exacta <em>*</em></span>
+            <input type="text" formControlName="direccion" autocomplete="street-address" placeholder="Calle, número, urbanización" />
+          </label>
+
+          <label class="field full">
+            <span>Referencia</span>
+            <input type="text" formControlName="referencia" placeholder="Ej. Casa azul, frente al parque" />
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving()">
+            {{ saving() ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+
+      <aside class="perfil-photo-card">
+        <h2><span class="section-icon" aria-hidden="true">📷</span> Foto de perfil</h2>
+        <div class="photo-wrap">
+          @if (avatarUrl(); as url) {
+            <img [src]="url" alt="Foto de perfil" class="profile-photo" />
+          } @else {
+            <span class="profile-photo initials">{{ initials() }}</span>
+          }
+          <span class="camera-badge" aria-hidden="true">📷</span>
+        </div>
+        <p class="photo-hint">JPG, PNG o GIF · Máx. 2 MB</p>
+        <label class="btn btn-outline change-photo">
+          <span aria-hidden="true">⬆</span>
+          Cambiar foto
+          <input type="file" accept="image/jpeg,image/png,image/gif" hidden (change)="onPhotoSelected($event)" />
+        </label>
+      </aside>
+    </div>
+  }
+</section>

@@ -1,0 +1,160 @@
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-card,
+.table-card {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #cbd5e1;
+  }
+
+  input,
+  select {
+    padding: 0.5rem 0.65rem;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #fff;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .checkbox {
+    flex-direction: row;
+    align-items: center;
+    font-weight: 500;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    text-align: left;
+    padding: 0.6rem 0.4rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    color: #e2e8f0;
+  }
+
+  small {
+    display: block;
+    color: rgba(203, 213, 225, 0.7);
+  }
+}
+
+.alert.success {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.muted {
+  color: #64748b;
+}
+
+.image-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: 1px dashed rgba(148, 163, 184, 0.35);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.image-preview,
+.image-placeholder,
+.table-thumb {
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.image-placeholder,
+.table-thumb.placeholder {
+  display: grid;
+  place-items: center;
+  background: rgba(148, 163, 184, 0.08);
+  color: rgba(203, 213, 225, 0.7);
+  font-size: 0.9rem;
+}
+
+.table-thumb {
+  width: 56px;
+  max-width: 56px;
+  height: 42px;
+  aspect-ratio: auto;
+}
+
+.image-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.file-picker {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+.file-name,
+.help-text {
+  color: rgba(203, 213, 225, 0.7);
+  font-size: 0.8rem;
+}

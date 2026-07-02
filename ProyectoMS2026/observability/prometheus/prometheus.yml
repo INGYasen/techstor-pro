@@ -1,0 +1,45 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - localhost:9090
+
+  - job_name: auth
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - auth:8042
+
+  - job_name: gateway
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - gateway:7091
+
+  - job_name: producto
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - producto:9092
+
+  - job_name: catalogo
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - catalogo:8082
+
+  - job_name: pedido
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - pedido:9102
+
+  - job_name: pago
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - pago:9112

@@ -1,0 +1,39 @@
+<div class="user-menu-wrap">
+  <button type="button" class="user-menu-trigger" (click)="toggleMenu()" aria-expanded="{{ menuOpen() }}">
+    @if (avatarUrl(); as url) {
+      <img [src]="url" alt="" class="user-avatar user-avatar-sm" />
+    } @else {
+      <span class="user-avatar user-avatar-sm initials">{{ initials() }}</span>
+    }
+    <span class="user-name">{{ displayName() }}</span>
+    <span class="chevron" [class.open]="menuOpen()">▾</span>
+  </button>
+
+  @if (menuOpen()) {
+    <div class="user-dropdown" role="menu">
+      <div class="dropdown-header">
+        @if (avatarUrl(); as url) {
+          <img [src]="url" alt="" class="user-avatar user-avatar-lg" />
+        } @else {
+          <span class="user-avatar user-avatar-lg initials">{{ initials() }}</span>
+        }
+        <div class="dropdown-identity">
+          <strong>{{ displayName() }}</strong>
+          <span>{{ perfil()?.email || '' }}</span>
+        </div>
+      </div>
+
+      <a routerLink="/cliente/perfil" class="dropdown-item profile" (click)="closeMenu()" role="menuitem">
+        <span class="item-icon" aria-hidden="true">👤</span>
+        Mi perfil
+      </a>
+
+      <div class="dropdown-divider"></div>
+
+      <button type="button" class="dropdown-item logout" (click)="auth.logout(); closeMenu()" role="menuitem">
+        <span class="item-icon" aria-hidden="true">↪</span>
+        Cerrar sesión
+      </button>
+    </div>
+  }
+</div>

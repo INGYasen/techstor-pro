@@ -1,0 +1,3424 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Guia del curso de sistemas distribuidos con Spring Cloud">
+      
+      
+      
+      
+        <link rel="prev" href="../s01-arquitectura-base/">
+      
+      
+        <link rel="next" href="../s03-eureka-escalado/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/proyecto-logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>S2 - Configuracion y ambientes - TechStore-Proyecto final</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s2-gestion-centralizada-de-configuracion-y-ambientes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="TechStore-Proyecto final" class="md-header__button md-logo" aria-label="TechStore-Proyecto final" data-md-component="logo">
+      
+  
+  <img src="../../assets/images/proyecto-logo.png" alt="ecom logo" draggable="false" style="height:2.4rem;width:2.4rem;object-fit:contain">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            TechStore-Proyecto final
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S2 - Configuracion y ambientes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="TechStore-Proyecto final" class="md-nav__button md-logo" aria-label="TechStore-Proyecto final" data-md-component="logo">
+      
+  
+  <img src="../../assets/images/proyecto-logo.png" alt="ecom logo" draggable="false" style="height:2.4rem;width:2.4rem;object-fit:contain">
+
+    </a>
+    TechStore-Proyecto final
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_dist_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_dist_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Sistema distribuido base
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Sistema distribuido base
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s01-arquitectura-base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Servicio base
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Configuracion y ambientes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Configuracion y ambientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-resultado-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Resultado de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Motivacion de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Motivacion de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141-caso-configuracion-duplicada-entre-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4.1 Caso: configuración duplicada entre servicios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-conceptos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Conceptos clave
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-arquitectura-del-producto-en-ecom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Arquitectura del producto en ecom
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Arquitectura del producto en ecom">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#221-configuracion-en-dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.1 Configuración en DEV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#222-configuracion-en-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.2 Configuración en PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#223-estado-nuevo-de-urls-en-s2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.3 Estado nuevo de URLs en S2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-observabilidad-y-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Observabilidad y diagnóstico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Observabilidad y diagnóstico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#231-senales-basicas-a-revisar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.1 Señales básicas a revisar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#232-errores-frecuentes-y-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.2 Errores frecuentes y diagnóstico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-crear-la-base-infra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Crear la base infra
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-crear-proyecto-config-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Crear proyecto Config Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-habilitar-config-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Habilitar Config Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-crear-config-repo-dentro-de-infraconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Crear config-repo dentro de infra/config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-configurar-config-server-para-leer-config-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Configurar Config Server para leer config-repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-probar-config-server-en-dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Probar Config Server en DEV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-crear-archivos-de-configuracion-en-config-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Crear archivos de configuración en config-repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-consultar-perfiles-por-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Consultar perfiles por HTTP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.8 Consultar perfiles por HTTP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#381-probar-una-consulta-incorrecta-para-aprender-del-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8.1 Probar una consulta incorrecta para aprender del error
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-conectar-catalogo-ms-como-config-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Conectar catalogo-ms como Config Client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-levantar-catalogo-ms-en-dev-con-config-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 Levantar catalogo-ms en DEV con Config Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-respetar-el-orden-de-arranque-infraestructura-primero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 Respetar el orden de arranque: infraestructura primero
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-dockerizar-config-server-para-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12 Dockerizar Config Server para PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-probar-config-server-en-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 Probar Config Server en PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-actualizar-catalogo-ms-para-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14 Actualizar catalogo-ms para PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#315-probar-catalogo-ms-en-dev-y-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.15 Probar catalogo-ms en DEV y PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#316-repetir-el-patron-con-producto-ms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.16 Repetir el patrón con producto-ms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#317-ruta-alternativa-clonar-y-ejecutar-a-partir-del-tag-final-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.17 Ruta alternativa: clonar y ejecutar a partir del tag final de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.17 Ruta alternativa: clonar y ejecutar a partir del tag final de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3171-archivos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.17.1 Archivos clave
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-plantilla-de-evidencia-individual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Plantilla de evidencia individual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Plantilla de evidencia individual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#411-datos-del-estudiante" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.1 Datos del estudiante
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-trabajo-autonomo-realizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.2 Trabajo autónomo realizado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-evidencia-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.3 Evidencia técnica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-error-o-hallazgo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.4 Error o hallazgo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#415-reflexion-tecnica-breve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.5 Reflexión técnica breve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre-evaluativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre evaluativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Cierre evaluativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-resultados-esperados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Resultados esperados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-evidencia-del-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Evidencia del producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-preguntas-de-defensa-y-reflexion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Preguntas de defensa y reflexión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s03-eureka-escalado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Registro y descubrimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s04-gateway-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Acceso unico y trafico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s05-evaluacion-u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluacion U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Sistema distribuido robusto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Sistema distribuido robusto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s06-feign-circuit-breaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Comunicacion sincronica resiliente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s07-seguridad-jwt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Seguridad distribuida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s08-angular-cors-jwt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Mensajeria asincrona
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s09-kafka-eventos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Consistencia distribuida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s10-observabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Observabilidad y diagnostico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s11-integracion-fullstack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Integracion frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s12-evaluacion-u2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluacion U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Validacion y consolidacion
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Validacion y consolidacion
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s13-validacion-integral/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S13 - Validacion end-to-end
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s14-cierre-tecnico/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S14 - Revision tecnica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s15-defensa-tecnica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S15 - Defensa tecnica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s16-evaluacion-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S16 - Evaluacion final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-resultado-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Resultado de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-motivacion-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Motivacion de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Motivacion de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141-caso-configuracion-duplicada-entre-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4.1 Caso: configuración duplicada entre servicios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-explica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Explica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Explica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-conceptos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Conceptos clave
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-arquitectura-del-producto-en-ecom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Arquitectura del producto en ecom
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Arquitectura del producto en ecom">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#221-configuracion-en-dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.1 Configuración en DEV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#222-configuracion-en-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.2 Configuración en PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#223-estado-nuevo-de-urls-en-s2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.3 Estado nuevo de URLs en S2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-observabilidad-y-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Observabilidad y diagnóstico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Observabilidad y diagnóstico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#231-senales-basicas-a-revisar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.1 Señales básicas a revisar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#232-errores-frecuentes-y-diagnostico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.2 Errores frecuentes y diagnóstico
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-aplica-actividad-practica-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Aplica: actividad práctica guiada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Aplica: actividad práctica guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-crear-la-base-infra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Crear la base infra
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-crear-proyecto-config-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Crear proyecto Config Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-habilitar-config-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Habilitar Config Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-crear-config-repo-dentro-de-infraconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Crear config-repo dentro de infra/config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-configurar-config-server-para-leer-config-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Configurar Config Server para leer config-repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-probar-config-server-en-dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Probar Config Server en DEV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-crear-archivos-de-configuracion-en-config-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 Crear archivos de configuración en config-repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-consultar-perfiles-por-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8 Consultar perfiles por HTTP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.8 Consultar perfiles por HTTP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#381-probar-una-consulta-incorrecta-para-aprender-del-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.8.1 Probar una consulta incorrecta para aprender del error
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-conectar-catalogo-ms-como-config-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.9 Conectar catalogo-ms como Config Client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-levantar-catalogo-ms-en-dev-con-config-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.10 Levantar catalogo-ms en DEV con Config Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#311-respetar-el-orden-de-arranque-infraestructura-primero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.11 Respetar el orden de arranque: infraestructura primero
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-dockerizar-config-server-para-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.12 Dockerizar Config Server para PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-probar-config-server-en-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.13 Probar Config Server en PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-actualizar-catalogo-ms-para-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.14 Actualizar catalogo-ms para PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#315-probar-catalogo-ms-en-dev-y-prod-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.15 Probar catalogo-ms en DEV y PROD local
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#316-repetir-el-patron-con-producto-ms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.16 Repetir el patrón con producto-ms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#317-ruta-alternativa-clonar-y-ejecutar-a-partir-del-tag-final-de-la-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.17 Ruta alternativa: clonar y ejecutar a partir del tag final de la sesión
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.17 Ruta alternativa: clonar y ejecutar a partir del tag final de la sesión">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#3171-archivos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.17.1 Archivos clave
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-crea-actividad-autonoma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Crea: actividad autónoma
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Crea: actividad autónoma">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-plantilla-de-evidencia-individual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Plantilla de evidencia individual
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.1 Plantilla de evidencia individual">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#411-datos-del-estudiante" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.1 Datos del estudiante
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#412-trabajo-autonomo-realizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.2 Trabajo autónomo realizado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#413-evidencia-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.3 Evidencia técnica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#414-error-o-hallazgo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.4 Error o hallazgo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#415-reflexion-tecnica-breve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1.5 Reflexión técnica breve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cierre-evaluativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cierre evaluativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Cierre evaluativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-resultados-esperados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Resultados esperados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-evidencia-del-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Evidencia del producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-preguntas-de-defensa-y-reflexion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Preguntas de defensa y reflexión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="s2-gestion-centralizada-de-configuracion-y-ambientes">S2 - Gestión centralizada de configuración y ambientes</h1>
+<h2 id="1-introduccion">1. Introducción</h2>
+<p>Tiempo: 20 min.</p>
+<h3 id="11-proposito">1.1 Propósito</h3>
+<p>Centralizar la configuración del sistema para separar el código de los valores de ambiente y preparar a los microservicios para ejecutarse de forma consistente en DEV y PROD local.</p>
+<h3 id="12-resultado-de-aprendizaje">1.2 Resultado de aprendizaje</h3>
+<p>El estudiante implementa un servidor de configuración centralizada, publica configuraciones por servicio y perfil, consulta esas configuraciones por HTTP y verifica que un microservicio puede arrancar usando valores externos.</p>
+<h3 id="13-producto-de-sesion">1.3 Producto de sesión</h3>
+<p>Config Server operativo en <code>infra/config</code>, con <code>config-repo</code> local, perfiles <code>dev</code> y <code>prod</code>, consultas HTTP verificadas y al menos un microservicio leyendo configuración externa.</p>
+<h3 id="14-motivacion-de-la-sesion">1.4 Motivacion de la sesión</h3>
+<h4 id="141-caso-configuracion-duplicada-entre-servicios">1.4.1 Caso: configuración duplicada entre servicios</h4>
+<p>En la sesión anterior se construyo <code>catalogo-ms</code> como microservicio base. Al crecer el sistema aparecen nuevos servicios como <code>producto-ms</code>, <code>orden-ms</code>, <code>pago-ms</code> y componentes de infraestructura.</p>
+<p>Si cada proyecto guarda sus propios puertos, credenciales, rutas, perfiles y opciones de observabilidad, aparecen problemas:</p>
+<ul>
+<li>Cambios repetidos en muchos archivos.</li>
+<li>Diferencias accidentales entre DEV y PROD local.</li>
+<li>Credenciales o rutas hardcodeadas.</li>
+<li>Dificultad para saber que configuración usa cada servicio.</li>
+<li>Mayor riesgo de errores cuando se levantan varias instancias.</li>
+</ul>
+<p>La pregunta que guía esta sesión es:</p>
+<div class="highlight"><pre><span></span><code>Cómo hacemos que los servicios lean su configuración desde un punto central sin recompilar ni duplicar valores?
+</code></pre></div>
+<h3 id="15-ubicacion-en-el-curso">1.5 Ubicación en el curso</h3>
+<ul>
+<li>Unidad: U1 - Sistema distribuido base orientado a producción.</li>
+<li>Producto de unidad: sistema distribuido base funcional, configurable y preparado para múltiples instancias.</li>
+<li>Avance del producto en esta sesión: configuración externa por ambiente mediante Config Server.</li>
+</ul>
+<p>Roadmap para elaborar el producto de la unidad:</p>
+<pre class="mermaid"><code>flowchart TB
+    Cliente["Cliente de prueba&lt;br/&gt;PowerShell / bash / Swagger"]
+    Gateway["Gateway&lt;br/&gt;punto único de acceso&lt;br/&gt;balanceo de carga"]
+    Catalogo["catalogo-ms&lt;br/&gt;construido&lt;br/&gt;REST + BD + health"]
+    Producto["producto-ms&lt;br/&gt;trabajo aplicado"]
+    Eureka["Registro de servicios&lt;br/&gt;Eureka"]
+    Config["Servidor de configuración&lt;br/&gt;Config Server&lt;br/&gt;HOY"]
+    Repo["Repositorio de configuración&lt;br/&gt;catalogo-ms.yml&lt;br/&gt;producto-ms.yml&lt;br/&gt;HOY"]
+
+    Cliente --&gt; Gateway
+    Gateway --&gt; Catalogo
+    Gateway --&gt; Producto
+    Gateway -. descubre servicios .-&gt; Eureka
+    Catalogo -. registra instancia .-&gt; Eureka
+    Producto -. registra instancia .-&gt; Eureka
+    Catalogo -. carga configuracion .-&gt; Config
+    Producto -. carga configuracion .-&gt; Config
+    Config --&gt; Repo
+
+    classDef done fill:#e8f5e9,stroke:#2e7d32,color:#111;
+    classDef today fill:#ffe08a,stroke:#9a6b00,stroke-width:2px,color:#111;
+    class Catalogo done;
+    class Config,Repo today;</code></pre>
+<h2 id="2-explica">2. Explica</h2>
+<p>Tiempo: 15 min.</p>
+<h3 id="21-conceptos-clave">2.1 Conceptos clave</h3>
+<p>La configuración centralizada permite que los servicios obtengan valores de ambiente desde un servidor común. Así el código queda separado de valores como puertos, URLs, credenciales, rutas, niveles de log y opciones de observabilidad.</p>
+<p>Conceptos de la sesión:</p>
+<ul>
+<li><strong>Config Server</strong>: componente que entrega configuración por HTTP.</li>
+<li><strong>Config repo</strong>: repositorio o carpeta donde viven los archivos <code>*.yml</code> de configuración.</li>
+<li><strong>Perfil</strong>: variante de configuración, por ejemplo <code>dev</code> o <code>prod</code>.</li>
+<li><strong>Nombre de aplicación</strong>: identificador usado para buscar el archivo correcto, por ejemplo <code>catalogo-ms</code>.</li>
+<li><strong>Config Client</strong>: aplicación que lee su configuración desde Config Server.</li>
+</ul>
+<p>Convención de archivos:</p>
+<div class="highlight"><pre><span></span><code>{application-name}-{profile}.yml
+</code></pre></div>
+<p>Ejemplos:</p>
+<div class="highlight"><pre><span></span><code>catálogo-ms-dev.yml
+catálogo-ms-prod.yml
+producto-ms-dev.yml
+producto-ms-prod.yml
+</code></pre></div>
+<h3 id="22-arquitectura-del-producto-en-ecom">2.2 Arquitectura del producto en <code>ecom</code></h3>
+<p>En <code>ecom</code>, Config Server vive en:</p>
+<div class="highlight"><pre><span></span><code>infra/config
+</code></pre></div>
+<p>El repositorio local de configuración vive dentro del mismo proyecto para simplificar el laboratorio:</p>
+<div class="highlight"><pre><span></span><code>infra/config/config-repo
+</code></pre></div>
+<p>Aunque fisicamente <code>config-repo</code> esta dentro de <code>infra/config</code>, logicamente son responsabilidades distintas:</p>
+<ul>
+<li>Config Server atiende peticiones HTTP.</li>
+<li>Config repo almacena archivos de configuración.</li>
+</ul>
+<h4 id="221-configuracion-en-dev">2.2.1 Configuración en DEV</h4>
+<pre class="mermaid"><code>flowchart LR
+    Client["Cliente&lt;br/&gt;PowerShell / bash / navegador"]
+    Config["ecom-config&lt;br/&gt;Config Server&lt;br/&gt;infra/config&lt;br/&gt;localhost:18888"]
+    Repo["file:./config-repo&lt;br/&gt;catalogo-ms-dev.yml&lt;br/&gt;catalogo-ms-prod.yml&lt;br/&gt;producto-ms-dev.yml&lt;br/&gt;producto-ms-prod.yml"]
+    Catalogo["catalogo-ms"]
+    Producto["producto-ms"]
+
+    Client --&gt;|"GET localhost:18888/catalogo-ms/dev"| Config
+    Client --&gt;|"GET localhost:18888/producto-ms/dev"| Config
+    Config --&gt;|"lee archivos"| Repo
+    Catalogo -. "spring.config.import&lt;br/&gt;http://localhost:18888" .-&gt; Config
+    Producto -. "spring.config.import&lt;br/&gt;http://localhost:18888" .-&gt; Config
+
+    classDef server fill:#eef6ff,stroke:#2b6cb0,color:#111;
+    classDef repo fill:#fff4de,stroke:#b7791f,color:#111;
+    class Config,Catalogo,Producto server;
+    class Repo repo;</code></pre>
+<p>En DEV, Config Server corre con Maven en el host:</p>
+<div class="highlight"><pre><span></span><code>localhost:18888
+config-repo: file:./config-repo
+</code></pre></div>
+<h4 id="222-configuracion-en-prod-local">2.2.2 Configuración en PROD local</h4>
+<pre class="mermaid"><code>flowchart LR
+    Client["Cliente&lt;br/&gt;PowerShell / bash"]
+    subgraph Docker["Docker Network: ecom-prod-net"]
+        Config["ecom-config&lt;br/&gt;Config Server&lt;br/&gt;8888 interno"]
+        Repo["file:/config-repo&lt;br/&gt;catalogo-ms-prod.yml&lt;br/&gt;producto-ms-prod.yml"]
+        Catalogo["catalogo-ms"]
+        Producto["producto-ms"]
+    end
+
+    Client --&gt;|"GET localhost:28888/catalogo-ms/prod"| Config
+    Client --&gt;|"GET localhost:28888/producto-ms/prod"| Config
+    Config --&gt;|"lee archivos"| Repo
+    Catalogo -. "spring.config.import&lt;br/&gt;http://ecom-config:8888" .-&gt; Config
+    Producto -. "spring.config.import&lt;br/&gt;http://ecom-config:8888" .-&gt; Config
+
+    classDef server fill:#eef6ff,stroke:#2b6cb0,color:#111;
+    classDef repo fill:#fff4de,stroke:#b7791f,color:#111;
+    class Config,Catalogo,Producto server;
+    class Repo repo;</code></pre>
+<p>En PROD local, Config Server corre como contenedor:</p>
+<div class="highlight"><pre><span></span><code>host: localhost:28888
+docker interno: ecom-config:8888
+CONFIG_REPO_LOCATION=file:/config-repo
+</code></pre></div>
+<h4 id="223-estado-nuevo-de-urls-en-s2">2.2.3 Estado nuevo de URLs en S2</h4>
+<p>Las URLs de esta sesión corresponden al monorepo <code>ecom</code> nuevo. No se usan los puertos ni nombres del sistema anterior.</p>
+<table>
+<thead>
+<tr>
+<th>Ambiente</th>
+<th>Componente</th>
+<th>URL o nombre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEV</td>
+<td>Config Server</td>
+<td><code>http://localhost:18888</code></td>
+</tr>
+<tr>
+<td>DEV</td>
+<td>Config de catálogo</td>
+<td><code>http://localhost:18888/catalogo-ms/dev</code></td>
+</tr>
+<tr>
+<td>DEV</td>
+<td>Config de producto</td>
+<td><code>http://localhost:18888/producto-ms/dev</code></td>
+</tr>
+<tr>
+<td>DEV</td>
+<td><code>catalogo-ms</code></td>
+<td><code>http://localhost:&lt;puerto-dinamico&gt;</code></td>
+</tr>
+<tr>
+<td>PROD local</td>
+<td>Config Server desde host</td>
+<td><code>http://localhost:28888</code></td>
+</tr>
+<tr>
+<td>PROD local</td>
+<td>Config Server desde contenedores</td>
+<td><code>http://ecom-config:8888</code></td>
+</tr>
+<tr>
+<td>PROD local</td>
+<td>Config de catálogo</td>
+<td><code>http://localhost:28888/catalogo-ms/prod</code></td>
+</tr>
+<tr>
+<td>PROD local</td>
+<td>Config de producto</td>
+<td><code>http://localhost:28888/producto-ms/prod</code></td>
+</tr>
+<tr>
+<td>PROD local</td>
+<td><code>catalogo-ms</code> dentro de Docker</td>
+<td><code>http://catalogo-ms:8080</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplos que pertenecen al sistema anterior, como <code>localhost:7071</code>, <code>localhost:7072</code>, <code>localhost:8081</code>, <code>localhost:8082</code>, <code>/catalogo/dev</code> o <code>/catalogo/prod</code>, no se usan como rutas validas del sistema nuevo.</p>
+<h3 id="23-observabilidad-y-diagnostico">2.3 Observabilidad y diagnóstico</h3>
+<p>En esta sesión la observabilidad se enfoca en confirmar que Config Server está activo y que entrega la configuración esperada.</p>
+<h4 id="231-senales-basicas-a-revisar">2.3.1 Señales básicas a revisar</h4>
+<ul>
+<li>Health de Config Server.</li>
+<li>Métricas básicas de Config Server.</li>
+<li>Logs de arranque.</li>
+<li>Ruta del <code>config-repo</code>.</li>
+<li>Perfil consultado.</li>
+<li>Nombre de aplicación consultado.</li>
+<li>Diferencias entre <code>dev</code> y <code>prod</code>.</li>
+</ul>
+<h4 id="232-errores-frecuentes-y-diagnostico">2.3.2 Errores frecuentes y diagnóstico</h4>
+<table>
+<thead>
+<tr>
+<th>Problema</th>
+<th>Causa probable</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>404 al consultar configuración</td>
+<td>Nombre de aplicación o perfil incorrecto</td>
+<td>Revisar nombre del archivo <code>{app}-{profile}.yml</code></td>
+</tr>
+<tr>
+<td>Config Server no encuentra archivos</td>
+<td><code>search-locations</code> incorrecto</td>
+<td>En DEV revisar <code>file:./config-repo</code>; en PROD revisar <code>CONFIG_REPO_LOCATION</code></td>
+</tr>
+<tr>
+<td>Microservicio arranca con valores locales</td>
+<td>No importa Config Server</td>
+<td>Revisar <code>spring.config.import</code></td>
+</tr>
+<tr>
+<td>Microservicio no arranca</td>
+<td>Config Server apagado o URL incorrecta</td>
+<td>Levantar Config Server y revisar <code>CONFIG_SERVER_URL</code></td>
+</tr>
+<tr>
+<td>Se consulta <code>prod</code> pero aparecen valores de <code>dev</code></td>
+<td>Perfil activo incorrecto</td>
+<td>Revisar <code>SPRING_PROFILES_ACTIVE</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-aplica-actividad-practica-guiada">3. Aplica: actividad práctica guiada</h2>
+<p>En el laboratorio, el docente guía la construcción del Config Server y la externalizacion de configuración de <code>catalogo-ms</code>. Los estudiantes verifican la configuración por HTTP y luego repiten el patrón con <code>producto-ms</code>.</p>
+<p>Tiempo: 3h.</p>
+<p>La ruta principal de la sesión es construir desde cero. Si el estudiante necesita avanzar más rápido, puede usar la ruta alternativa del paso 3.17 para clonar el tag final y ejecutar las pruebas.</p>
+<ul>
+<li>Crear la base de infraestructura.</li>
+<li>Crear el proyecto <code>ecom-config</code>.</li>
+<li>Crear <code>config-repo</code> dentro de <code>infra/config</code>.</li>
+<li>Mover configuraciones <code>dev</code> y <code>prod</code> al repositorio de configuración.</li>
+<li>Conectar <code>catalogo-ms</code> como Config Client.</li>
+<li>Probar <code>catalogo-ms</code> en DEV y PROD local.</li>
+<li>Repetir el patrón con <code>producto-ms</code>.</li>
+</ul>
+<h3 id="31-crear-la-base-infra">3.1 Crear la base <code>infra</code></h3>
+<p><strong>Producto del paso:</strong> carpeta <code>infra</code> preparada para alojar componentes de infraestructura del sistema.</p>
+<p>En <code>ecom</code>, la infraestructura se trabaja dentro del monorepo. Si construyes desde cero, ubicate en la raiz del proyecto y crea la carpeta:</p>
+<p>PowerShell / bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>infra
+</code></pre></div>
+<p>En esta versión del curso trabajaremos todo desde <code>ecom</code>. La opción de clonar un avance ya terminado queda separada en la ruta alternativa del paso 3.17.</p>
+<p>Estructura esperada al iniciar la sesión:</p>
+<div class="highlight"><pre><span></span><code>ecom
+  infra/
+  services/
+    catálogo-ms/
+    producto-ms/
+</code></pre></div>
+<h3 id="32-crear-proyecto-config-server">3.2 Crear proyecto Config Server</h3>
+<p><strong>Producto del paso:</strong> proyecto Spring Boot <code>ecom-config</code> creado dentro de <code>infra/config</code>.</p>
+<p>Desde VS Code, usa Spring Initializr:</p>
+<div class="highlight"><pre><span></span><code>Spring Initializr: Create a Maven Project
+</code></pre></div>
+<p>Configuración del proyecto:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Project</td>
+<td>Maven Project</td>
+</tr>
+<tr>
+<td>Spring Boot</td>
+<td>3.5.x</td>
+</tr>
+<tr>
+<td>Language</td>
+<td>Java</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>17</td>
+</tr>
+<tr>
+<td>Group Id</td>
+<td><code>com.upeu</code></td>
+</tr>
+<tr>
+<td>Artifact Id</td>
+<td><code>ecom-config</code></td>
+</tr>
+<tr>
+<td>Package name</td>
+<td><code>com.upeu.configserver</code></td>
+</tr>
+<tr>
+<td>Packaging</td>
+<td>Jar</td>
+</tr>
+<tr>
+<td>Ubicación</td>
+<td><code>infra/config</code></td>
+</tr>
+</tbody>
+</table>
+<p>Dependencias Spring Boot:</p>
+<table>
+<thead>
+<tr>
+<th>Grupo</th>
+<th>Dependencias</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spring Cloud</td>
+<td>Config Server</td>
+<td>Entregar configuración externa por HTTP</td>
+</tr>
+<tr>
+<td>Operación</td>
+<td>Spring Boot Actuator</td>
+<td>Verificar health del servidor</td>
+</tr>
+<tr>
+<td>Productividad</td>
+<td>Spring Boot DevTools</td>
+<td>Facilitar ejecución en desarrollo</td>
+</tr>
+</tbody>
+</table>
+<p>En S2 aparece Spring Cloud por primera vez. En esta sesión solo usamos Config Server; Eureka, Gateway y Load Balancer se integran en las sesiones siguientes.</p>
+<p>En <code>pom.xml</code>, la dependencia clave es:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.cloud<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-cloud-config-server<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<h3 id="33-habilitar-config-server">3.3 Habilitar Config Server</h3>
+<p><strong>Producto del paso:</strong> aplicación Spring Boot marcada como servidor de configuración.</p>
+<p>En la clase principal agrega <code>@EnableConfigServer</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.upeu.configserver</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.SpringApplication</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.autoconfigure.SpringBootApplication</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.cloud.config.server.EnableConfigServer</span><span class="p">;</span>
+
+<span class="nd">@SpringBootApplication</span>
+<span class="nd">@EnableConfigServer</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ConfigServerApplication</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">ConfigServerApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="34-crear-config-repo-dentro-de-infraconfig">3.4 Crear <code>config-repo</code> dentro de <code>infra/config</code></h3>
+<p><strong>Producto del paso:</strong> repositorio local de configuración creado dentro del proyecto Config Server.</p>
+<p>PowerShell / bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>infra/config/config-repo
+</code></pre></div>
+<p>En esta versión del curso, <code>config-repo</code> vive dentro de <code>infra/config</code> para reducir dispersion de archivos durante el laboratorio local.</p>
+<p>Conceptualmente siguen siendo dos responsabilidades distintas:</p>
+<div class="highlight"><pre><span></span><code>Config Server -&gt; entrega configuración por HTTP
+config-repo   -&gt; almacena archivos YAML por servicio y ambiente
+</code></pre></div>
+<h3 id="35-configurar-config-server-para-leer-config-repo">3.5 Configurar Config Server para leer <code>config-repo</code></h3>
+<p><strong>Producto del paso:</strong> Config Server configurado para leer archivos desde <code>infra/config/config-repo</code> en DEV.</p>
+<p>En <code>infra/config/src/main/resources/application.yml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18888</span>
+
+<span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">application</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecom-config</span>
+<span class="w">  </span><span class="nt">profiles</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<span class="w">  </span><span class="nt">cloud</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">server</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">native</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">search-locations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CONFIG_REPO_LOCATION:file:./config-repo}</span>
+
+<span class="nt">management</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">exposure</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health,info,metrics</span>
+<span class="w">  </span><span class="nt">endpoint</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">health</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">show-details</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+</code></pre></div>
+<p>En DEV no se define variable de entorno. Se usa el valor por defecto:</p>
+<div class="highlight"><pre><span></span><code>file:./config-repo
+</code></pre></div>
+<p>Eso significa que debes ejecutar Maven parado en:</p>
+<div class="highlight"><pre><span></span><code>infra/config
+</code></pre></div>
+<p>En PROD local si se usará variable de entorno, porque el repositorio se monta dentro del contenedor como <code>/config-repo</code>.</p>
+<h3 id="36-probar-config-server-en-dev">3.6 Probar Config Server en DEV</h3>
+<p><strong>Producto del paso:</strong> Config Server ejecutando en <code>localhost:18888</code>.</p>
+<p>PowerShell / bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/config
+mvn<span class="w"> </span>spring-boot:run
+</code></pre></div>
+<p>Verifica health:</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="p">`</span>
+  <span class="n">-Method</span> <span class="n">Get</span> <span class="p">`</span>
+  <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:18888/actuator/health&quot;</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:18888/actuator/health
+</code></pre></div>
+<p>Verifica metrics:</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="p">`</span>
+  <span class="n">-Method</span> <span class="n">Get</span> <span class="p">`</span>
+  <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:18888/actuator/metrics&quot;</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:18888/actuator/metrics
+</code></pre></div>
+<h3 id="37-crear-archivos-de-configuracion-en-config-repo">3.7 Crear archivos de configuración en <code>config-repo</code></h3>
+<p><strong>Producto del paso:</strong> configuraciones <code>dev</code> y <code>prod</code> creadas para <code>catalogo-ms</code>.</p>
+<p>Crea estos archivos:</p>
+<div class="highlight"><pre><span></span><code>infra/config/config-repo/catalogo-ms-dev.yml
+infra/config/config-repo/catalogo-ms-prod.yml
+</code></pre></div>
+<p>Regla de nombres:</p>
+<div class="highlight"><pre><span></span><code>{spring.application.name}-{profile}.yml
+</code></pre></div>
+<p>Ejemplo para DEV:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+
+<span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://localhost:15432/ecom_catalogo_db</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecom</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecom</span>
+<span class="w">    </span><span class="nt">driver-class-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.postgresql.Driver</span>
+<span class="w">  </span><span class="nt">flyway</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">locations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classpath:db/migration</span>
+<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ddl-auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
+<span class="w">    </span><span class="nt">show-sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format_sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">springdoc</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">swagger-ui</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/swagger-ui.html</span>
+
+<span class="nt">logging</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">level</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">com.upeu.catalogo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+
+<span class="nt">management</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">exposure</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health,info,metrics</span>
+<span class="w">  </span><span class="nt">endpoint</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">health</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">show-details</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+</code></pre></div>
+<p>Ejemplo para PROD local:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">server</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+
+<span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_USER}</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_PASS}</span>
+<span class="w">    </span><span class="nt">driver-class-name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">org.postgresql.Driver</span>
+<span class="w">  </span><span class="nt">flyway</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">locations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classpath:db/migration</span>
+<span class="w">  </span><span class="nt">jpa</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ddl-auto</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate</span>
+<span class="w">    </span><span class="nt">show-sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hibernate</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format_sql</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">springdoc</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">swagger-ui</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">api-docs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">management</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">exposure</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health,info</span>
+<span class="w">  </span><span class="nt">endpoint</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">health</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">show-details</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">never</span>
+</code></pre></div>
+<h3 id="38-consultar-perfiles-por-http">3.8 Consultar perfiles por HTTP</h3>
+<p><strong>Producto del paso:</strong> configuración externa consultada sin levantar el microservicio.</p>
+<p>Con Config Server ejecutando en DEV:</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:18888/catalogo-ms/dev&quot;</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:18888/catalogo-ms/prod&quot;</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:18888/catalogo-ms/dev
+curl<span class="w"> </span>http://localhost:18888/catalogo-ms/prod
+</code></pre></div>
+<p>Resultado esperado:</p>
+<ul>
+<li>La respuesta debe indicar <code>name: catalogo-ms</code>.</li>
+<li>La respuesta debe indicar <code>profiles: ["dev"]</code>.</li>
+<li>En <code>propertySources</code> debe aparecer un archivo parecido a <code>file:.../infra/config/config-repo/catalogo-ms-dev.yml</code>.</li>
+<li>Dentro de <code>source</code> deben verse propiedades como <code>server.port</code>, <code>spring.datasource.url</code>, <code>spring.flyway.enabled</code>, <code>spring.jpa.hibernate.ddl-auto</code>, <code>springdoc.swagger-ui.path</code> y <code>management.endpoints.web.exposure.include</code>.</li>
+</ul>
+<p>Ejemplo resumido del resultado:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;catalogo-ms&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;profiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;dev&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;propertySources&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file:.../config-repo/catalogo-ms-dev.yml&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;server.port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;spring.datasource.url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jdbc:postgresql://localhost:15432/ecom_catalogo_db&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;spring.flyway.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;spring.jpa.hibernate.ddl-auto&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;validate&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;springdoc.swagger-ui.path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/swagger-ui.html&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;management.endpoints.web.exposure.include&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;health,info,metrics,prometheus&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Si Config Server no muestra esas propiedades, no continues a PROD. Primero corrige el nombre del archivo, el perfil o la ubicación de <code>config-repo</code>.</p>
+<h4 id="381-probar-una-consulta-incorrecta-para-aprender-del-error">3.8.1 Probar una consulta incorrecta para aprender del error</h4>
+<p>Ahora consulta un nombre que no coincide con <code>spring.application.name</code> ni con el archivo del <code>config-repo</code>.</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:18888/catalogo/dev&quot;</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:18888/catalogo/dev
+</code></pre></div>
+<p>Resultado esperado:</p>
+<ul>
+<li>La consulta no debe devolver la configuración de <code>catalogo-ms-dev.yml</code>.</li>
+<li>Puede responder sin <code>propertySources</code> útiles o con una respuesta vacia según la configuración del servidor.</li>
+<li>El error conceptual es que <code>catalogo</code> no coincide con <code>catalogo-ms</code>.</li>
+</ul>
+<p>La regla que debe quedar clara:</p>
+<div class="highlight"><pre><span></span><code>spring.application.name = catálogo-ms
+archivo esperado       = catálogo-ms-dev.yml
+URL correcta           = /catálogo-ms/dev
+URL incorrecta         = /catálogo/dev
+</code></pre></div>
+<p>Este error controlado ayuda a diagnosticar uno de los problemas más comunes en Config Server: el servicio arranca o consulta una configuración que no corresponde porque el nombre de aplicación y el nombre del archivo no coinciden.</p>
+<h3 id="39-conectar-catalogo-ms-como-config-client">3.9 Conectar <code>catalogo-ms</code> como Config Client</h3>
+<p><strong>Producto del paso:</strong> <code>catalogo-ms</code> preparado para consumir configuración externa en DEV.</p>
+<p>Este paso tiene dos cambios: agregar Config Client al microservicio y mover sus archivos de ambiente hacia <code>config-repo</code>.</p>
+<p>Agrega tres configuraciones en <code>services/catalogo-ms/pom.xml</code>.</p>
+<ol>
+<li>Declarar la versión de Spring Cloud en <code>&lt;properties&gt;</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;properties&gt;</span>
+<span class="w">    </span><span class="nt">&lt;java.version&gt;</span>17<span class="nt">&lt;/java.version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;spring-cloud.version&gt;</span>2025.0.1<span class="nt">&lt;/spring-cloud.version&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+</code></pre></div>
+<ol>
+<li>Agregar la dependencia de Config Client en <code>&lt;dependencies&gt;</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.springframework.cloud<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>spring-cloud-starter-config<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<ol>
+<li>Agregar el BOM de Spring Cloud en <code>&lt;dependencyManagement&gt;</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependencyManagement&gt;</span>
+<span class="w">    </span><span class="nt">&lt;dependencies&gt;</span>
+<span class="w">        </span><span class="nt">&lt;dependency&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>org.springframework.cloud<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>spring-cloud-dependencies<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;version&gt;</span>${spring-cloud.version}<span class="nt">&lt;/version&gt;</span>
+<span class="w">            </span><span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>
+<span class="w">            </span><span class="nt">&lt;scope&gt;</span>import<span class="nt">&lt;/scope&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/dependencyManagement&gt;</span>
+</code></pre></div>
+<p>Luego deja <code>services/catalogo-ms/src/main/resources/application.yml</code> solo con configuración base e importacion del Config Server:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">application</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">catalogo-ms</span>
+<span class="w">  </span><span class="nt">profiles</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dev</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">import</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;optional:configserver:${CONFIG_SERVER_URL:http://localhost:18888}&quot;</span>
+</code></pre></div>
+<p>Mueve la configuración que antes estaba en <code>application-dev.yml</code> y <code>application-prod.yml</code> hacia:</p>
+<div class="highlight"><pre><span></span><code>infra/config/config-repo/catalogo-ms-dev.yml
+infra/config/config-repo/catalogo-ms-prod.yml
+</code></pre></div>
+<p>En DEV se usa <code>http://localhost:18888</code>. En PROD local se usará <code>CONFIG_SERVER_URL=http://ecom-config:8888</code>.</p>
+<p>La URL no lleva usuario ni password porque el Config Server actual no tiene seguridad habilitada. Si luego se agrega seguridad básica al Config Server, la URL cambiaria a un formato como <code>http://usuario:password@host:puerto</code>.</p>
+<h3 id="310-levantar-catalogo-ms-en-dev-con-config-server">3.10 Levantar <code>catalogo-ms</code> en DEV con Config Server</h3>
+<p><strong>Producto del paso:</strong> <code>catalogo-ms</code> ejecutando con valores entregados por Config Server.</p>
+<p>Terminal 1:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/config
+mvn<span class="w"> </span>spring-boot:run
+</code></pre></div>
+<p>Terminal 2:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>services/catalogo-ms
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
+mvn<span class="w"> </span>spring-boot:run
+</code></pre></div>
+<p>Verifica en logs:</p>
+<ul>
+<li>Nombre de aplicación <code>catalogo-ms</code>.</li>
+<li>Perfil <code>dev</code>.</li>
+<li>Puerto dinamico.</li>
+<li>Conexión a PostgreSQL.</li>
+<li>Configuración recibida desde Config Server.</li>
+</ul>
+<p>Luego prueba que <code>catalogo-ms</code> sigue funcionando. Como el puerto es dinamico, toma el puerto asignado desde la consola de Spring Boot. En los ejemplos se usa <code>&lt;puerto&gt;</code>.</p>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="p">`</span>
+  <span class="n">-Method</span> <span class="n">Get</span> <span class="p">`</span>
+  <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:&lt;puerto&gt;/actuator/health&quot;</span>
+
+<span class="nb">Invoke-RestMethod</span> <span class="p">`</span>
+  <span class="n">-Method</span> <span class="n">Get</span> <span class="p">`</span>
+  <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:&lt;puerto&gt;/actuator/metrics&quot;</span>
+
+<span class="nb">Invoke-RestMethod</span> <span class="p">`</span>
+  <span class="n">-Method</span> <span class="n">Get</span> <span class="p">`</span>
+  <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:&lt;puerto&gt;/api/v1/categorias&quot;</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:&lt;puerto&gt;/actuator/health
+curl<span class="w"> </span>http://localhost:&lt;puerto&gt;/actuator/metrics
+curl<span class="w"> </span>http://localhost:&lt;puerto&gt;/api/v1/categorias
+</code></pre></div>
+<p>También revisa Swagger desde el navegador:</p>
+<div class="highlight"><pre><span></span><code>http://localhost:&lt;puerto&gt;/swagger-ui.html
+</code></pre></div>
+<p>Resultado esperado:</p>
+<ul>
+<li><code>/actuator/health</code> responde <code>UP</code>.</li>
+<li><code>/actuator/metrics</code> responde la lista de métricas disponibles.</li>
+<li><code>/api/v1/categorias</code> responde <code>200 OK</code>, aunque el arreglo este vacio <code>[]</code>.</li>
+<li>Swagger muestra los endpoints del controlador de categorías.</li>
+</ul>
+<p>Esta validación cierra DEV: Config Server entrega configuración y <code>catalogo-ms</code> mantiene su CRUD operativo. Recien después de esto se pasa a PROD local.</p>
+<p>También puedes iniciar una segunda instancia en DEV desde otra terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>services/catalogo-ms
+mvn<span class="w"> </span>spring-boot:run
+</code></pre></div>
+<p>Como <code>server.port</code> es dinamico (<code>0</code>), cada instancia toma un puerto libre. El comportamiento funcional debe mantenerse igual: ambas instancias leen la misma configuración centralizada y responden el mismo CRUD.</p>
+<h3 id="311-respetar-el-orden-de-arranque-infraestructura-primero">3.11 Respetar el orden de arranque: infraestructura primero</h3>
+<p><strong>Producto del paso:</strong> orden de ejecución definido para que Config Server este disponible antes de levantar los microservicios.</p>
+<p>En esta sesión no se crea la red de producción manualmente. La infraestructura la prepara cuando se levanta con Docker Compose.</p>
+<p>La regla de trabajo es:</p>
+<div class="highlight"><pre><span></span><code>1. Levantar infraestructura
+2. Levantar microservicios
+</code></pre></div>
+<p>En DEV:</p>
+<div class="highlight"><pre><span></span><code>infra/config -&gt; Config Server con Maven
+services/catalogo-ms -&gt; PostgreSQL DEV con Docker Compose + app con Maven
+</code></pre></div>
+<p>En PROD local:</p>
+<div class="highlight"><pre><span></span><code>infra -&gt; ecom-config con Docker Compose
+services/catalogo-ms -&gt; BD + catálogo-ms con Docker Compose
+</code></pre></div>
+<p>Este orden es importante porque los microservicios necesitan consultar Config Server al arrancar. En PROD local, <code>infra/compose.yml</code> crea la red compartida y luego <code>catalogo-ms</code> se conecta a esa red para resolver <code>http://ecom-config:8888</code>.</p>
+<h3 id="312-dockerizar-config-server-para-prod-local">3.12 Dockerizar Config Server para PROD local</h3>
+<p><strong>Producto del paso:</strong> Config Server preparado para ejecutarse como contenedor <code>ecom-config</code>.</p>
+<p>En <code>infra/config/Dockerfile</code> se construye el JAR y se ejecuta con Java 17:</p>
+<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">maven:3.9.9-eclipse-temurin-17</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="k">COPY</span><span class="w"> </span>pom.xml<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>-q<span class="w"> </span>-DskipTests<span class="w"> </span>dependency:go-offline
+
+<span class="k">COPY</span><span class="w"> </span>src<span class="w"> </span>./src
+<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>-q<span class="w"> </span>clean<span class="w"> </span>package<span class="w"> </span>-DskipTests
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">eclipse-temurin:17-jre</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+
+<span class="k">COPY</span><span class="w"> </span>--from<span class="o">=</span>build<span class="w"> </span>/app/target/*.jar<span class="w"> </span>app.jar
+
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8888</span>
+
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;java&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-jar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;app.jar&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>En <code>infra/compose.yml</code>, Config Server se publica en el host como <code>28888</code> y monta <code>config-repo</code> dentro del contenedor:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config</span>
+<span class="w">      </span><span class="nt">dockerfile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Dockerfile</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecom-config</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;28888:8888&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./config/config-repo:/config-repo</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">SERVER_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8888</span>
+<span class="w">      </span><span class="nt">SPRING_PROFILES_ACTIVE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<span class="w">      </span><span class="nt">CONFIG_REPO_LOCATION</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file:/config-repo</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecom-prod-net</span>
+</code></pre></div>
+<p>En PROD local, la ruta cambia porque ahora Config Server corre dentro de Docker:</p>
+<div class="highlight"><pre><span></span><code>file:/config-repo
+</code></pre></div>
+<h3 id="313-probar-config-server-en-prod-local">3.13 Probar Config Server en PROD local</h3>
+<p><strong>Producto del paso:</strong> Config Server ejecutando como contenedor y entregando perfiles <code>prod</code>.</p>
+<p>PowerShell / bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build<span class="w"> </span>config
+docker<span class="w"> </span>compose<span class="w"> </span>ps
+</code></pre></div>
+<p>Consulta con PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:28888/catalogo-ms/prod&quot;</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:28888/actuator/health&quot;</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:28888/actuator/metrics&quot;</span>
+</code></pre></div>
+<p>Consulta con bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:28888/catalogo-ms/prod
+curl<span class="w"> </span>http://localhost:28888/actuator/health
+curl<span class="w"> </span>http://localhost:28888/actuator/metrics
+</code></pre></div>
+<p>Resultado esperado:</p>
+<ul>
+<li>La respuesta de <code>catalogo-ms/prod</code> debe indicar <code>name: catalogo-ms</code>.</li>
+<li>La respuesta debe indicar <code>profiles: ["prod"]</code>.</li>
+<li>En <code>propertySources</code> debe aparecer <code>file:/config-repo/catalogo-ms-prod.yml</code>.</li>
+<li>Deben verse valores de PROD, por ejemplo <code>server.port: 8080</code>, <code>spring.flyway.enabled: true</code>, <code>spring.jpa.hibernate.ddl-auto: validate</code>, <code>springdoc.swagger-ui.enabled: false</code> y <code>springdoc.api-docs.enabled: false</code>.</li>
+<li><code>/actuator/health</code> responde <code>UP</code>.</li>
+<li><code>/actuator/metrics</code> responde la lista de métricas disponibles de Config Server.</li>
+</ul>
+<h3 id="314-actualizar-catalogo-ms-para-prod-local">3.14 Actualizar <code>catalogo-ms</code> para PROD local</h3>
+<p><strong>Producto del paso:</strong> <code>catalogo-ms</code> preparado para consumir Config Server desde Docker.</p>
+<p>En <code>.env</code> y <code>.env.example</code> de <code>catalogo-ms</code>, agrega o verifica:</p>
+<div class="highlight"><pre><span></span><code>SPRING_PROFILES_ACTIVE=prod
+CONFIG_SERVER_URL=http://ecom-config:8888
+
+DB_NAME=ecom_catalogo_db
+DB_USER=ecom
+DB_PASS=ecom
+</code></pre></div>
+<p>En <code>compose.yml</code>, el microservicio debe recibir esas variables:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">SPRING_PROFILES_ACTIVE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${SPRING_PROFILES_ACTIVE}</span>
+<span class="w">  </span><span class="nt">CONFIG_SERVER_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${CONFIG_SERVER_URL}</span>
+<span class="w">  </span><span class="nt">DB_HOST</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecom-postgres-catalogo</span>
+<span class="w">  </span><span class="nt">DB_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<span class="w">  </span><span class="nt">DB_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_NAME}</span>
+<span class="w">  </span><span class="nt">DB_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_USER}</span>
+<span class="w">  </span><span class="nt">DB_PASS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DB_PASS}</span>
+</code></pre></div>
+<p>Y debe conectarse a la red compartida:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecom-catalogo-int</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ecom-prod-net</span>
+</code></pre></div>
+<h3 id="315-probar-catalogo-ms-en-dev-y-prod-local">3.15 Probar <code>catalogo-ms</code> en DEV y PROD local</h3>
+<p><strong>Producto del paso:</strong> <code>catalogo-ms</code> verificado consumiendo configuración centralizada en ambos ambientes.</p>
+<p>DEV:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/config
+mvn<span class="w"> </span>spring-boot:run
+</code></pre></div>
+<p>En otra terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>services/catalogo-ms
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose-dev.yml<span class="w"> </span>up<span class="w"> </span>-d
+mvn<span class="w"> </span>spring-boot:run
+</code></pre></div>
+<p>PROD local:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build<span class="w"> </span>config
+</code></pre></div>
+<p>En otra terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>services/catalogo-ms
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build<span class="w"> </span>--scale<span class="w"> </span>catalogo-ms<span class="o">=</span><span class="m">2</span>
+</code></pre></div>
+<p>Verifica health interno del MS:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--network<span class="w"> </span>ecom-catalogo-int<span class="w"> </span>curlimages/curl:8.10.1<span class="w"> </span>-s<span class="w"> </span>http://catalogo-ms:8080/actuator/health
+</code></pre></div>
+<p>Verifica que el CRUD siga funcionando en PROD local:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--network<span class="w"> </span>ecom-catalogo-int<span class="w"> </span>curlimages/curl:8.10.1<span class="w"> </span>-s<span class="w"> </span>http://catalogo-ms:8080/api/v1/categorias
+</code></pre></div>
+<p>Resultado esperado:</p>
+<ul>
+<li><code>catalogo-ms</code> arranca con perfil <code>prod</code>.</li>
+<li>El microservicio obtiene su configuración desde <code>http://ecom-config:8888</code>.</li>
+<li><code>/actuator/health</code> responde <code>UP</code>.</li>
+<li><code>/api/v1/categorias</code> responde <code>200 OK</code>, aunque el arreglo este vacio <code>[]</code>.</li>
+<li>Swagger no se prueba en PROD porque esta deshabilitado en <code>catalogo-ms-prod.yml</code>.</li>
+<li>La opción <code>--scale catalogo-ms=2</code> levanta dos instancias del mismo microservicio. El cambio de S2 es interno: ahora ambas instancias leen configuración desde Config Server.</li>
+</ul>
+<p>Al terminar:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down
+</code></pre></div>
+<h3 id="316-repetir-el-patron-con-producto-ms">3.16 Repetir el patrón con <code>producto-ms</code></h3>
+<p><strong>Producto del paso:</strong> <code>producto-ms</code> preparado para consumir configuración centralizada.</p>
+<p>Repite el mismo patrón:</p>
+<ol>
+<li>Crear <code>producto-ms-dev.yml</code>.</li>
+<li>Crear <code>producto-ms-prod.yml</code>.</li>
+<li>Dejar <code>application.yml</code> con <code>spring.application.name: producto-ms</code>.</li>
+<li>Agregar <code>spring.config.import</code>.</li>
+<li>Probar consulta HTTP:</li>
+</ol>
+<p>PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:18888/producto-ms/dev&quot;</span>
+<span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">Get</span> <span class="n">-Uri</span> <span class="s2">&quot;http://localhost:18888/producto-ms/prod&quot;</span>
+</code></pre></div>
+<p>bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:18888/producto-ms/dev
+curl<span class="w"> </span>http://localhost:18888/producto-ms/prod
+</code></pre></div>
+<h3 id="317-ruta-alternativa-clonar-y-ejecutar-a-partir-del-tag-final-de-la-sesion">3.17 Ruta alternativa: clonar y ejecutar a partir del tag final de la sesión</h3>
+<p>Esta sección sirve si quieres partir del tag final de la sesión y solo levantar, probar y revisar evidencias sin repetir toda la construcción paso a paso.</p>
+<p>PowerShell / bash macOS/Linux:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>vs02-configuracion-centralizada<span class="w"> </span>https://github.com/261dist/ecom.git<span class="w"> </span>ecom-s02
+<span class="nb">cd</span><span class="w"> </span>ecom-s02
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Necesidad</th>
+<th>Referencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Levantar Config Server DEV</td>
+<td><a href="#36-probar-config-server-en-dev">Ver paso 3.6</a></td>
+</tr>
+<tr>
+<td>Consultar perfiles por HTTP</td>
+<td><a href="#38-consultar-perfiles-por-http">Ver paso 3.8</a></td>
+</tr>
+<tr>
+<td>Conectar <code>catalogo-ms</code></td>
+<td><a href="#39-conectar-catalogo-ms-como-config-client">Ver paso 3.9</a></td>
+</tr>
+<tr>
+<td>Probar Config Server PROD local</td>
+<td><a href="#313-probar-config-server-en-prod-local">Ver paso 3.13</a></td>
+</tr>
+<tr>
+<td>Probar <code>catalogo-ms</code> DEV/PROD</td>
+<td><a href="#315-probar-catalogo-ms-en-dev-y-prod-local">Ver paso 3.15</a></td>
+</tr>
+</tbody>
+</table>
+<p>Comandos mínimos DEV:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra/config
+mvn<span class="w"> </span>spring-boot:run
+</code></pre></div>
+<p>Comandos mínimos PROD local:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>infra
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build<span class="w"> </span>config
+docker<span class="w"> </span>compose<span class="w"> </span>ps
+</code></pre></div>
+<h4 id="3171-archivos-clave">3.17.1 Archivos clave</h4>
+<table>
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>infra/config/pom.xml</code></td>
+<td>Dependencias del Config Server</td>
+</tr>
+<tr>
+<td><code>infra/config/src/main/resources/application.yml</code></td>
+<td>Configuración del servidor</td>
+</tr>
+<tr>
+<td><code>infra/config/config-repo/*-dev.yml</code></td>
+<td>Configuración DEV por servicio</td>
+</tr>
+<tr>
+<td><code>infra/config/config-repo/*-prod.yml</code></td>
+<td>Configuración PROD por servicio</td>
+</tr>
+<tr>
+<td><code>infra/config/Dockerfile</code></td>
+<td>Imagen de Config Server</td>
+</tr>
+<tr>
+<td><code>infra/compose.yml</code></td>
+<td>Producción local de infraestructura</td>
+</tr>
+<tr>
+<td><code>services/*/src/main/resources/application.yml</code></td>
+<td>Importacion de Config Server desde los microservicios</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-crea-actividad-autonoma">4. Crea: actividad autónoma</h2>
+<p>Fuera del aula, cada estudiante consolida el aprendizaje aplicando configuración externa a otro componente del sistema y entrega una evidencia individual.</p>
+<p>Tiempo: 4h fuera del aula.</p>
+<p>Esta actividad autónoma se desarrolla sobre el proyecto de fin de curso del equipo. El producto de la unidad se construye por acumulacion de los avances de cada sesión; por eso, la evidencia de esta sesión debe incorporarse a la documentación del proyecto y quedar trazable en GitHub.</p>
+<h3 id="41-plantilla-de-evidencia-individual">4.1 Plantilla de evidencia individual</h3>
+<p>Entrega un PDF con el siguiente nombre:</p>
+<p>El PDF de esta sesión debe generarse como impresion o exportacion de la sección correspondiente en MkDocs o una herramienta equivalente. No se acepta un PDF armado manualmente fuera de la documentación del proyecto.</p>
+<div class="highlight"><pre><span></span><code>S02_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>Ejemplo:</p>
+<div class="highlight"><pre><span></span><code>S02_Equipo03_QuispeAna.pdf
+</code></pre></div>
+<p>El PDF debe usar esta estructura. La primera sección ya define el trabajo autónomo; completa las demas con tus evidencias.</p>
+<h4 id="411-datos-del-estudiante">4.1.1 Datos del estudiante</h4>
+<ul>
+<li>Nombre:</li>
+<li>Equipo:</li>
+<li>Sesión: S02 - Gestión centralizada de configuración y ambientes</li>
+<li>Rol o aporte realizado:</li>
+<li>Link de GitHub:</li>
+</ul>
+<h4 id="412-trabajo-autonomo-realizado">4.1.2 Trabajo autónomo realizado</h4>
+<p>Completa y evidencia estas tareas:</p>
+<ol>
+<li>Completar la configuración externa de <code>producto-ms</code>.</li>
+<li>Comparar <code>catalogo-ms-dev.yml</code> con <code>catalogo-ms-prod.yml</code>.</li>
+<li>Identificar un valor que no debería quedar hardcodeado.</li>
+<li>Consultar por HTTP al menos dos perfiles.</li>
+<li>Verificar que el microservicio sigue funcionando.</li>
+<li>Explicar como Config Server separa código y configuración.</li>
+</ol>
+<h4 id="413-evidencia-tecnica">4.1.3 Evidencia técnica</h4>
+<p>Incluye capturas o salidas de consola con una breve explicación debajo de cada una:</p>
+<ul>
+<li>Consulta en DEV <code>http://localhost:18888/producto-ms/dev</code>.</li>
+<li>Consulta en DEV del perfil PROD <code>http://localhost:18888/producto-ms/prod</code>.</li>
+<li>Prueba del microservicio funcionando en DEV.</li>
+<li>Prueba del microservicio funcionando en PROD local, si corresponde.</li>
+<li>Comparación entre configuración DEV y PROD.</li>
+</ul>
+<p>No mezcles puertos en la evidencia DEV. Si Config Server esta corriendo con Maven, se consulta por <code>localhost:18888</code>, incluso cuando quieres revisar el perfil <code>prod</code>.</p>
+<p>Usa <code>http://localhost:28888/producto-ms/prod</code> solo si ya levantaste Config Server en PROD local con Docker Compose desde <code>infra</code>.</p>
+<h4 id="414-error-o-hallazgo">4.1.4 Error o hallazgo</h4>
+<p>Describe al menos un error, diferencia o hallazgo técnico:</p>
+<ul>
+<li>Que ocurrió.</li>
+<li>Como lo diagnosticaste.</li>
+<li>Como lo corregiste o que aprendiste.</li>
+</ul>
+<h4 id="415-reflexion-tecnica-breve">4.1.5 Reflexión técnica breve</h4>
+<p>Responde en 5 a 8 líneas:</p>
+<div class="highlight"><pre><span></span><code>Cómo ayuda Config Server cuando el sistema crece a muchos microservicios e instancias?
+</code></pre></div>
+<h3 id="42-criterios-minimos-de-aceptacion">4.2 Criterios mínimos de aceptación</h3>
+<p>La evidencia individual se considera completa si:</p>
+<ul>
+<li>El archivo respeta el nombre <code>S02_Equipo##_ApellidoNombre.pdf</code>.</li>
+<li>Incluye evidencias técnicas legibles.</li>
+<li>Muestra configuración externa de <code>producto-ms</code>.</li>
+<li>Compara al menos un valor entre DEV y PROD.</li>
+<li>Explica un aporte individual verificable.</li>
+<li>No contiene solo pantallazos: cada evidencia tiene una descripción breve.</li>
+</ul>
+<h2 id="5-cierre-evaluativo">5. Cierre evaluativo</h2>
+<p>Tiempo: 20 min.</p>
+<p>Esta sección se revisa según la programación metodológica definida en la guía del curso. Conecta el resultado de aprendizaje con el producto que cada estudiante evidencio en la actividad autónoma.</p>
+<p>La idea central de la sesión es que el sistema sigue funcionando igual para el usuario y para las pruebas, pero internamente queda preparado para administrar configuración de muchos microservicios e instancias desde un punto central.</p>
+<h3 id="51-resultados-esperados">5.1 Resultados esperados</h3>
+<p>Al finalizar la sesión, el estudiante debe demostrar que:</p>
+<ul>
+<li>Config Server ejecuta en DEV.</li>
+<li>Config Server ejecuta en PROD local con Docker.</li>
+<li><code>config-repo</code> entrega perfiles <code>dev</code> y <code>prod</code>.</li>
+<li>Un microservicio lee configuración externa.</li>
+<li>Puede explicar la diferencia entre Config Server y Config repo.</li>
+<li>Puede diagnosticar un perfil no encontrado.</li>
+</ul>
+<h3 id="52-evidencia-del-producto-de-sesion">5.2 Evidencia del producto de sesión</h3>
+<p>Cada estudiante entrega un PDF individual siguiendo la plantilla de la sección 4.1.</p>
+<p>Nombre del archivo:</p>
+<div class="highlight"><pre><span></span><code>S02_Equipo##_ApellidoNombre.pdf
+</code></pre></div>
+<p>La evidencia debe demostrar:</p>
+<ul>
+<li>Producto de sesión construido.</li>
+<li>Aporte individual verificable.</li>
+<li>Pruebas técnicas realizadas.</li>
+<li>Reflexión técnica breve.</li>
+</ul>
+<p>La revisión se realiza con los criterios mínimos de aceptación de la sección 4.2 y la rúbrica de la sección 5.4.</p>
+<h3 id="53-preguntas-de-defensa-y-reflexion">5.3 Preguntas de defensa y reflexión</h3>
+<ol>
+<li>Qué problema resuelve la configuración centralizada?</li>
+<li>Qué diferencia hay entre Config Server y Config repo?</li>
+<li>Por qué <code>config-repo</code> puede estar dentro de <code>infra/config</code> y aún así ser un componente lógico separado?</li>
+<li>Cómo se forma la URL <code>/{application}/{profile}</code>?</li>
+<li>Qué debe coincidir entre <code>spring.application.name</code> y los archivos de configuración?</li>
+<li>Qué cambia entre DEV y PROD local?</li>
+<li>Cómo diagnosticas un perfil no encontrado?</li>
+</ol>
+<h3 id="54-rubrica-de-evaluacion">5.4 Rúbrica de evaluación</h3>
+<table>
+<thead>
+<tr>
+<th>Dimensión</th>
+<th style="text-align: right;">Peso</th>
+<th>3 - Logro destacado</th>
+<th>2 - Logro</th>
+<th>1 - Proceso</th>
+<th>0 - Inicio</th>
+<th style="text-align: right;">Puntuación obtenida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Config Server operativo</td>
+<td style="text-align: right;">2</td>
+<td>Evidencia Config Server en DEV y PROD local, con health/metrics y perfiles correctos.</td>
+<td>Evidencia Config Server en DEV con health/metrics y perfiles.</td>
+<td>Evidencia parcial: arranca, pero sin health/metrics o perfiles claros.</td>
+<td>No evidencia Config Server funcionando.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Configuración externa DEV/PROD</td>
+<td style="text-align: right;">2</td>
+<td>Explica y evidencia <code>config-repo</code>, perfiles, diferencias DEV/PROD y valores no hardcodeados.</td>
+<td>Muestra perfiles <code>dev</code> y <code>prod</code> con diferencias claras.</td>
+<td>Muestra un perfil o configuración incompleta.</td>
+<td>No evidencia separación entre código y configuración.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Microservicio como Config Client</td>
+<td style="text-align: right;">2</td>
+<td>Evidencia Config Client, health, metrics y CRUD funcionando después de externalizar configuración.</td>
+<td>Evidencia que el microservicio arranca leyendo Config Server y responde health o CRUD.</td>
+<td>Evidencia arranque parcial o sin prueba funcional.</td>
+<td>No demuestra conexión del microservicio con Config Server.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Aporte individual verificable</td>
+<td style="text-align: right;">2</td>
+<td>Aporte claro, verificable y conectado al producto del equipo.</td>
+<td>Aporte claro con archivo, comando o prueba realizada.</td>
+<td>Aporte mencionado de forma general.</td>
+<td>No se identifica aporte individual.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Diagnóstico de error o hallazgo</td>
+<td style="text-align: right;">1</td>
+<td>Analiza error/hallazgo, causa, solución y aprendizaje técnico.</td>
+<td>Explica causa probable y solución parcial.</td>
+<td>Menciona un problema sin explicarlo.</td>
+<td>No presenta error ni hallazgo.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>6. Reflexión técnica y orden</td>
+<td style="text-align: right;">1</td>
+<td>Reflexión técnica precisa, PDF ordenado, capturas legibles y explicaciones breves.</td>
+<td>Reflexión clara y evidencias entendibles.</td>
+<td>Reflexión superficial o evidencias poco legibles.</td>
+<td>PDF desordenado o sin reflexión.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Puntuación acumulada = suma de (<code>Peso</code> * <code>Puntuacion obtenida</code>) = ____.</p>
+<p>Nota final = (<code>Puntuacion acumulada</code> / 30) * 20 = ____.</p>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF usando la rúbrica de la sesión.
+Para cada dimensión selecciona la puntuación obtenida usando la escala Inicio=0, Proceso=1, Logro=2, Logro destacado=3.
+Justifica brevemente cada puntuación.
+Calcula la puntuación acumulada con la fórmula: suma de (Peso * Puntuación obtenida).
+Calcula la nota final sobre 20 con la fórmula: (Puntuación acumulada / 30) * 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

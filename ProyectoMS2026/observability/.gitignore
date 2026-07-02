@@ -1,0 +1,20 @@
+# IDEs and editors
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Local environment files
+#.env
+#.env.*
+#!.env.example
+
+# Runtime logs and temp files
+*.log
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db

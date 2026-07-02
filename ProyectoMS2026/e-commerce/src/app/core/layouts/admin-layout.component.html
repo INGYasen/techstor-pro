@@ -1,0 +1,50 @@
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <a class="sidebar-brand" routerLink="/admin">
+      <img class="brand-icon" src="/images/logo-proyecto.png" alt="" width="56" height="56" />
+      <div class="brand-text">
+        <span class="brand-title">TechStore</span>
+        <span class="brand-sub">Administración</span>
+      </div>
+    </a>
+
+    <nav class="admin-menu">
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <span class="nav-icon" aria-hidden="true">🏠</span> Inicio
+      </a>
+      <a routerLink="/admin/productos" routerLinkActive="active">
+        <span class="nav-icon" aria-hidden="true">📦</span> Productos
+      </a>
+      <a routerLink="/admin/categorias" routerLinkActive="active">
+        <span class="nav-icon" aria-hidden="true">🏷️</span> Categorías
+      </a>
+      <a routerLink="/admin/pedidos" routerLinkActive="active">
+        <span class="nav-icon" aria-hidden="true">📋</span> Pedidos
+      </a>
+      <a routerLink="/admin/pagos" routerLinkActive="active">
+        <span class="nav-icon" aria-hidden="true">💳</span> Pagos
+      </a>
+      <a routerLink="/admin/usuarios" routerLinkActive="active">
+        <span class="nav-icon" aria-hidden="true">👥</span> Usuarios
+      </a>
+    </nav>
+
+    <a routerLink="/" class="sidebar-store-link">
+      <span class="nav-icon" aria-hidden="true">🛒</span> Ver tienda
+    </a>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <p class="topbar-title">Panel de administración</p>
+      <div class="topbar-actions">
+        <span class="user-pill">{{ auth.getUsername() }}</span>
+        <button type="button" class="btn-logout" (click)="auth.logout()">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

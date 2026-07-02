@@ -1,0 +1,134 @@
+<section class="catalog-page">
+  @if (message()) {
+    <div class="toast success">{{ message() }}</div>
+  }
+  @if (error()) {
+    <div class="toast error">{{ error() }}</div>
+  }
+
+  <div class="catalog-layout">
+    <aside class="catalog-sidebar">
+      <div class="sidebar-block">
+        <h3>Categorías</h3>
+        <div class="category-combobox">
+          <select
+            [ngModel]="categoriaSelectValue()"
+            (ngModelChange)="onCategoriaChange($event)"
+          >
+            <option value="all">Todos ({{ contarCategoria(null) }})</option>
+            @for (cat of categorias(); track cat.id) {
+              <option [value]="cat.id">{{ cat.nombre }} ({{ contarCategoria(cat.id) }})</option>
+            }
+          </select>
+          <span class="combobox-chevron" aria-hidden="true">▾</span>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <h3>Rango de precio</h3>
+        <div class="price-range">
+          <input
+            type="number"
+            placeholder="Mín"
+            min="0"
+            [ngModel]="precioMin()"
+            (ngModelChange)="precioMin.set($event === '' || $event == null ? null : +$event)"
+          />
+          <span>—</span>
+          <input
+            type="number"
+            placeholder="Máx"
+            min="0"
+            [ngModel]="precioMax()"
+            (ngModelChange)="precioMax.set($event === '' || $event == null ? null : +$event)"
+          />
+        </div>
+      </div>
+    </aside>
+
+    <div class="catalog-main">
+      <div class="catalog-toolbar">
+        <div>
+          <h1>{{ selectedCategoriaId() ? nombreCategoria(selectedCategoriaId()!) : 'Todos los productos' }}</h1>
+          <p>{{ productosFiltrados().length }} productos encontrados</p>
+        </div>
+        <div class="sort-control">
+          <span class="sort-label">Ordenar por</span>
+          <div class="sort-select-wrap">
+            <select [ngModel]="sortBy()" (ngModelChange)="sortBy.set($event)">
+              <option value="nombre">Nombre</option>
+              <option value="precio-asc">Precio: menor a mayor</option>
+              <option value="precio-desc">Precio: mayor a menor</option>
+            </select>
+            <span class="sort-chevron" aria-hidden="true">▾</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="catalog-search-bar">
+        <div class="search-input-wrap">
+          <input
+            type="search"
+            placeholder="Buscar productos, marcas, categorías..."
+            [ngModel]="catalogSearch.term()"
+            (ngModelChange)="catalogSearch.term.set($event)"
+          />
+          <span class="search-icon" aria-hidden="true">🔍</span>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="loading-grid">
+          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+            <div class="skeleton-card"></div>
+          }
+        </div>
+      } @else if (!productosFiltrados().length) {
+        <div class="empty-state">
+          <p>No hay productos con los filtros actuales.</p>
+          <button type="button" class="btn outline" (click)="seleccionarCategoria(null); catalogSearch.term.set('')">
+            Limpiar filtros
+          </button>
+        </div>
+      } @else {
+        <div class="product-grid">
+          @for (p of productosFiltrados(); track p.id) {
+            @let meta = categoriaMeta(nombreCategoria(p.idCategoria));
+            <article class="product-card">
+              <div class="product-media">
+                @if (imagenProducto(p)) {
+                  <img [src]="imagenProducto(p)!" [alt]="p.nombre" />
+                } @else {
+                  <div class="product-fallback" [class]="'tone-' + meta.tone">
+                    <span>{{ meta.icon }}</span>
+                  </div>
+                }
+                <button
+                  type="button"
+                  class="btn-cart-hover"
+                  (click)="agregar(p)"
+                  title="Agregar al carrito"
+                  aria-label="Agregar al carrito"
+                >
+                  🛒
+                </button>
+              </div>
+
+              <div class="product-body">
+                <h3>{{ p.nombre }}</h3>
+                <p>{{ p.descripcion || 'Producto tecnológico disponible en TechStore.' }}</p>
+                <div class="product-footer">
+                  <strong>S/ {{ p.precio | number:'1.0-0' }}</strong>
+                  <span class="category-pill" [class]="'tone-' + meta.tone">
+                    <span class="pill-icon">{{ meta.icon }}</span>
+                    {{ nombreCategoria(p.idCategoria) }}
+                  </span>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

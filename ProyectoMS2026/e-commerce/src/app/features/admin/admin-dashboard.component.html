@@ -1,0 +1,119 @@
+<section class="admin-dashboard">
+  @if (loading()) {
+    <div class="dash-loading">
+      <div class="skeleton hero-banner"></div>
+      <div class="skeleton kpi-row"></div>
+      <div class="skeleton chart-row"></div>
+      <div class="skeleton modules-row"></div>
+    </div>
+  } @else {
+    <header class="hero-banner">
+      <div class="hero-text">
+        <h1>¡Hola, {{ auth.getUsername() || 'admin' }}! 👋</h1>
+        <p>Bienvenido al panel de administración de TechStore. Gestiona tu tienda desde aquí.</p>
+      </div>
+      <a routerLink="/" class="hero-store-btn">Ver tienda pública ↗</a>
+      <img src="/images/laptop-hero.png" alt="Laptop TechStore" class="hero-illustration" />
+    </header>
+
+    <div class="kpi-row">
+      @for (card of kpiCards; track card.route) {
+        <article class="kpi-card" [class]="'kpi-' + card.theme">
+          <img [src]="card.watermark" alt="" class="kpi-watermark" />
+          <div class="kpi-top">
+            <span class="kpi-icon-box">
+              <img [src]="card.icon" alt="" />
+            </span>
+            <div class="kpi-body">
+              <span class="kpi-label">{{ card.label }}</span>
+              <strong class="kpi-value">{{ statValue(card) }}</strong>
+              <span class="kpi-hint">{{ card.hint }}</span>
+            </div>
+          </div>
+          <a [routerLink]="card.route" class="kpi-link">{{ card.linkText }} →</a>
+        </article>
+      }
+    </div>
+
+    <div class="dash-main">
+      <article class="dash-card chart-card">
+        <div class="chart-head">
+          <h2>Ventas por método de pago</h2>
+          <span class="chart-period">Este mes</span>
+        </div>
+
+        @if (paymentSlices().length) {
+          <div class="chart-layout">
+            <div class="donut-wrap">
+              <div class="donut" [style.background]="donutStyle()"></div>
+              <div class="donut-hole">
+                <span>Total</span>
+                <strong>{{ formatMoney(stats().ventas) }}</strong>
+              </div>
+            </div>
+
+            <ul class="chart-legend">
+              @for (slice of paymentSlices(); track slice.label) {
+                <li>
+                  <span class="dot" [style.background]="slice.color"></span>
+                  <span class="legend-name">{{ slice.label }}</span>
+                  <span class="legend-meta">
+                    <strong>{{ slice.percent }}%</strong>
+                    <small>{{ formatMoney(slice.amount) }}</small>
+                  </span>
+                </li>
+              }
+            </ul>
+          </div>
+
+          <div class="chart-footer">
+            <span>Total ventas</span>
+            <strong>{{ formatMoney(stats().ventas) }}</strong>
+          </div>
+        } @else {
+          <div class="chart-empty">
+            <p>Aún no hay pagos aprobados.</p>
+            <a routerLink="/admin/pagos">Ir a pagos →</a>
+          </div>
+        }
+      </article>
+
+      <article class="dash-card quick-card">
+        <h2>Accesos rápidos</h2>
+        <ul class="quick-list">
+          @for (link of quickLinks; track link.route) {
+            <li>
+              <a [routerLink]="link.route" [class]="'quick-' + link.theme">
+                <span class="quick-icon">
+                  <img [src]="link.image" alt="" />
+                </span>
+                <span class="quick-copy">
+                  <strong>{{ link.title }}</strong>
+                  <small>{{ link.description }}</small>
+                </span>
+                <span class="quick-chevron" aria-hidden="true">›</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </article>
+    </div>
+
+    <section class="modules-section">
+      <h2>Módulos</h2>
+      <div class="modules-grid">
+        @for (mod of modules; track mod.route) {
+          <a [routerLink]="mod.route" class="module-card" [class]="'module-' + mod.theme">
+            <div class="module-copy">
+              <h3>{{ mod.title }}</h3>
+              <p>{{ mod.description }}</p>
+            </div>
+            <img [src]="mod.image" alt="" class="module-image" />
+          </a>
+        }
+      </div>
+    </section>
+
+    <footer class="dash-footer">© 2026 TechStore. Panel de administración.</footer>
+  }
+</section>

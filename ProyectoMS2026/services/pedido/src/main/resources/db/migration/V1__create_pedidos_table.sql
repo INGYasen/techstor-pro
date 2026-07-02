@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS pedidos (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    cliente VARCHAR(100) NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    observacion VARCHAR(255),
+    PRIMARY KEY (id)
+);

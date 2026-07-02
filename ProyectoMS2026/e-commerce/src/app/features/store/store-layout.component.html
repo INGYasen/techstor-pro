@@ -1,0 +1,55 @@
+<div class="store-shell">
+  @if (toast.message(); as t) {
+    <div class="global-toast" [class]="t.type">{{ t.text }}</div>
+  }
+  <header class="store-nav">
+    <div class="store-nav-inner">
+      <div class="store-nav-left">
+        <a class="brand" routerLink="/">
+          <img class="brand-icon" src="/images/logo-proyecto.png" alt="" width="52" height="52" />
+          <span>TechStore</span>
+        </a>
+
+        <nav class="store-menu">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+        <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+        @if (auth.canUseCart()) {
+          <a routerLink="/carrito" routerLinkActive="active">Carrito</a>
+        }
+        @if (auth.isLoggedIn() && auth.canUseCart()) {
+          <a routerLink="/cliente/pedidos" routerLinkActive="active">Mis pedidos</a>
+        }
+        @if (auth.isLoggedIn() && auth.canUseCart()) {
+          <a routerLink="/cliente/pagos" routerLinkActive="active">Mis pagos</a>
+        }
+      </nav>
+      </div>
+
+      <div class="store-actions">
+        @if (auth.canUseCart()) {
+          <a class="icon-link" routerLink="/carrito" aria-label="Carrito">
+            🛒
+            @if (cart.itemCount() > 0) {
+              <span class="cart-badge">{{ cart.itemCount() }}</span>
+            }
+          </a>
+        }
+        @if (auth.isLoggedIn() && auth.canUseCart()) {
+          <div class="user-session">
+            <app-user-menu />
+            <button type="button" class="btn-nav ghost logout-btn" (click)="auth.logout()">Cerrar sesión</button>
+          </div>
+        } @else if (auth.isLoggedIn() && auth.isAdminUser()) {
+          <a class="btn-nav outline" routerLink="/admin">Administración</a>
+          <button type="button" class="btn-nav ghost logout-btn" (click)="auth.logout()">Cerrar sesión</button>
+        } @else {
+          <a class="login-link" routerLink="/login">Iniciar sesión</a>
+        }
+      </div>
+    </div>
+  </header>
+
+  <main class="store-main">
+    <router-outlet />
+  </main>
+</div>

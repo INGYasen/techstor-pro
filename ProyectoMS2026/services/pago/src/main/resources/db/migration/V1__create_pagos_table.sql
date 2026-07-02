@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS pagos (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    id_pedido BIGINT NOT NULL,
+    monto DECIMAL(12, 2) NOT NULL,
+    metodo VARCHAR(50) NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+);

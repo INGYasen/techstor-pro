@@ -1,0 +1,133 @@
+<section class="cart-page">
+  <header class="cart-header">
+    <div class="cart-header-text">
+      <span class="cart-eyebrow">Tu compra</span>
+      <h1>Carrito de compras</h1>
+      <p>{{ items().length }} producto{{ items().length === 1 ? '' : 's' }} · Precios con IGV incluido</p>
+    </div>
+    <a routerLink="/catalogo" class="btn-ghost">
+      <span aria-hidden="true">←</span> Seguir comprando
+    </a>
+  </header>
+
+  @if (!items().length) {
+    <div class="empty-state">
+      <div class="empty-icon" aria-hidden="true">🛒</div>
+      <h2>Tu carrito está vacío</h2>
+      <p>Explora el catálogo y agrega tecnología al mejor precio.</p>
+      <a routerLink="/catalogo" class="btn-primary">Ver catálogo</a>
+    </div>
+  } @else {
+    <div class="cart-grid">
+      <section class="cart-items-panel" aria-label="Productos en el carrito">
+        <div class="panel-head">
+          <h2>Productos</h2>
+          <span class="panel-count">{{ items().length }} artículo{{ items().length === 1 ? '' : 's' }}</span>
+        </div>
+
+        <div class="cart-items-list">
+          @for (item of items(); track item.producto.id) {
+            <article class="cart-row">
+              <a class="row-thumb" [routerLink]="['/producto', item.producto.id]">
+                @if (imagenProducto(item.producto.imagenUrl)) {
+                  <img [src]="imagenProducto(item.producto.imagenUrl)!" [alt]="item.producto.nombre" />
+                } @else {
+                  <span class="thumb-placeholder">📦</span>
+                }
+              </a>
+
+              <div class="row-body">
+                <div class="row-top">
+                  <div class="row-info">
+                    <a class="row-title" [routerLink]="['/producto', item.producto.id]">{{ item.producto.nombre }}</a>
+                    <span class="row-unit">S/ {{ item.producto.precio | number: '1.2-2' }} c/u <span class="igv-tag">inc. IGV</span></span>
+                    @if (item.producto.stock <= 3) {
+                      <span class="row-stock">Solo {{ item.producto.stock }} en stock</span>
+                    }
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-remove"
+                    (click)="quitar(item.producto.id)"
+                    aria-label="Eliminar {{ item.producto.nombre }}"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div class="row-bottom">
+                  <div class="qty-stepper" aria-label="Cantidad">
+                    <button
+                      type="button"
+                      (click)="cambiarCantidad(item.producto.id, -1)"
+                      [disabled]="item.cantidad <= 1"
+                      aria-label="Disminuir cantidad"
+                    >−</button>
+                    <span>{{ item.cantidad }}</span>
+                    <button
+                      type="button"
+                      (click)="cambiarCantidad(item.producto.id, 1)"
+                      [disabled]="item.cantidad >= item.producto.stock"
+                      aria-label="Aumentar cantidad"
+                    >+</button>
+                  </div>
+                  <strong class="row-total">S/ {{ item.producto.precio * item.cantidad | number: '1.2-2' }}</strong>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+
+      <aside class="summary-panel" aria-label="Resumen de compra">
+        <h2>Resumen</h2>
+
+        @if (faltaEnvioGratis() > 0) {
+          <div class="promo-banner">
+            <span class="promo-icon" aria-hidden="true">🚚</span>
+            <p>Agrega <strong>S/ {{ faltaEnvioGratis() | number: '1.2-2' }}</strong> más para envío gratis</p>
+          </div>
+        } @else {
+          <div class="promo-banner success">
+            <span class="promo-icon" aria-hidden="true">✓</span>
+            <p>Envío gratis en este pedido</p>
+          </div>
+        }
+
+        <div class="summary-lines">
+          <div class="summary-line">
+            <span>Subtotal productos</span>
+            <span>S/ {{ subtotal() | number: '1.2-2' }}</span>
+          </div>
+          <div class="summary-line muted">
+            <span>Envío</span>
+            <span>{{ envio() === 0 ? 'Gratis' : ('S/ ' + (envio() | number: '1.2-2')) }}</span>
+          </div>
+        </div>
+
+        <div class="summary-total">
+          <span>Total a pagar</span>
+          <strong>S/ {{ total() | number: '1.2-2' }}</strong>
+        </div>
+
+        <div class="igv-breakdown">
+          <p class="igv-title">Desglose de impuestos <span>(ya incluidos en el precio)</span></p>
+          <div class="igv-line"><span>Base imponible</span><span>S/ {{ baseImponible() | number: '1.2-2' }}</span></div>
+          <div class="igv-line"><span>IGV (18%)</span><span>S/ {{ impuestos() | number: '1.2-2' }}</span></div>
+        </div>
+
+        <button type="button" class="btn-primary btn-checkout" (click)="continuarCompra()">
+          {{ auth.isLoggedIn() && !auth.isAdmin() ? 'Continuar al pago' : 'Iniciar sesión y continuar' }}
+        </button>
+
+        <p class="summary-hint">
+          @if (auth.isLoggedIn() && !auth.isAdmin()) {
+            Siguiente paso: dirección de envío y método de pago.
+          } @else {
+            Inicia sesión con tu cuenta de cliente para finalizar la compra.
+          }
+        </p>
+      </aside>
+    </div>
+  }
+</section>

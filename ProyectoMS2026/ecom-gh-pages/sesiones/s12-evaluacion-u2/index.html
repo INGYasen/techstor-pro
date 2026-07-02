@@ -1,0 +1,1854 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Guia del curso de sistemas distribuidos con Spring Cloud">
+      
+      
+      
+      
+        <link rel="prev" href="../s11-integracion-fullstack/">
+      
+      
+        <link rel="next" href="../s13-validacion-integral/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/proyecto-logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>S12 - Evaluacion U2 - TechStore-Proyecto final</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#s12-evaluacion-u2" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="TechStore-Proyecto final" class="md-header__button md-logo" aria-label="TechStore-Proyecto final" data-md-component="logo">
+      
+  
+  <img src="../../assets/images/proyecto-logo.png" alt="ecom logo" draggable="false" style="height:2.4rem;width:2.4rem;object-fit:contain">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            TechStore-Proyecto final
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              S12 - Evaluacion U2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="TechStore-Proyecto final" class="md-nav__button md-logo" aria-label="TechStore-Proyecto final" data-md-component="logo">
+      
+  
+  <img src="../../assets/images/proyecto-logo.png" alt="ecom logo" draggable="false" style="height:2.4rem;width:2.4rem;object-fit:contain">
+
+    </a>
+    TechStore-Proyecto final
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Silabos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_dist_2026_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../silabo_dist_2026_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Silabo 2026-2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Sistema distribuido base
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Sistema distribuido base
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s01-arquitectura-base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S1 - Servicio base
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s02-configuracion-centralizada/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S2 - Configuracion y ambientes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s03-eureka-escalado/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S3 - Registro y descubrimiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s04-gateway-load-balancer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S4 - Acceso unico y trafico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s05-evaluacion-u1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S5 - Evaluacion U1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Sistema distribuido robusto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Sistema distribuido robusto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s06-feign-circuit-breaker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S6 - Comunicacion sincronica resiliente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s07-seguridad-jwt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S7 - Seguridad distribuida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s08-angular-cors-jwt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S8 - Mensajeria asincrona
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s09-kafka-eventos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S9 - Consistencia distribuida
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s10-observabilidad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S10 - Observabilidad y diagnostico
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s11-integracion-fullstack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S11 - Integracion frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluacion U2
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S12 - Evaluacion U2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-instrucciones-iniciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Instrucciones iniciales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Instrucciones iniciales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-resultado-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Resultado de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-preguntas-del-docente-durante-la-sustentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Preguntas del docente durante la sustentación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-encuadre-de-la-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Encuadre de la evaluación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Encuadre de la evaluación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-del-producto-de-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura del producto de unidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-tiempo-de-exposicion-por-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Tiempo de exposición por equipo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-presentacion-y-sustentacion-del-producto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Presentación y sustentación del producto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Presentación y sustentación del producto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-plantilla-de-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Plantilla de entrega
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 Plantilla de entrega">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#311-datos-del-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1.1 Datos del equipo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-evidencia-tecnica-del-avance-u2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1.2 Evidencia técnica del avance U2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-presentacion-del-proyecto-u2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1.3 Presentación del proyecto U2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-documentacion-en-mkdocs-o-herramienta-equivalente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1.4 Documentación en MkDocs o herramienta equivalente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-secuencia-sugerida-de-presentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Secuencia sugerida de presentación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-retroalimentacion-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Retroalimentacion posterior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Retroalimentacion posterior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-mejoras-y-recomendaciones-para-la-siguiente-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Mejoras y recomendaciones para la siguiente unidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Validacion y consolidacion
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Validacion y consolidacion
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s13-validacion-integral/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S13 - Validacion end-to-end
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s14-cierre-tecnico/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S14 - Revision tecnica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s15-defensa-tecnica/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S15 - Defensa tecnica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../s16-evaluacion-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    S16 - Evaluacion final
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-instrucciones-iniciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Instrucciones iniciales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Instrucciones iniciales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-proposito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Propósito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-resultado-de-aprendizaje" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Resultado de aprendizaje
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-producto-de-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Producto de sesión
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-preguntas-del-docente-durante-la-sustentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Preguntas del docente durante la sustentación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-ubicacion-en-el-curso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Ubicación en el curso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-encuadre-de-la-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Encuadre de la evaluación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Encuadre de la evaluación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-arquitectura-del-producto-de-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Arquitectura del producto de unidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-tiempo-de-exposicion-por-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Tiempo de exposición por equipo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-presentacion-y-sustentacion-del-producto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Presentación y sustentación del producto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Presentación y sustentación del producto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-plantilla-de-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Plantilla de entrega
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 Plantilla de entrega">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#311-datos-del-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1.1 Datos del equipo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#312-evidencia-tecnica-del-avance-u2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1.2 Evidencia técnica del avance U2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#313-presentacion-del-proyecto-u2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1.3 Presentación del proyecto U2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#314-documentacion-en-mkdocs-o-herramienta-equivalente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1.4 Documentación en MkDocs o herramienta equivalente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-secuencia-sugerida-de-presentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Secuencia sugerida de presentación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-criterios-minimos-de-aceptacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Criterios mínimos de aceptación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-retroalimentacion-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Retroalimentacion posterior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Retroalimentacion posterior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-mejoras-y-recomendaciones-para-la-siguiente-unidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Mejoras y recomendaciones para la siguiente unidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="s12-evaluacion-u2">S12 - Evaluación U2</h1>
+<h2 id="1-instrucciones-iniciales">1. Instrucciones iniciales</h2>
+<p>Tiempo: 5 min.</p>
+<h3 id="11-proposito">1.1 Propósito</h3>
+<p>Validar que el sistema distribuido robusto integra comunicación entre servicios, seguridad, eventos, consistencia, observabilidad y frontend.</p>
+<h3 id="12-resultado-de-aprendizaje">1.2 Resultado de aprendizaje</h3>
+<p>El estudiante demuestra que el sistema responde ante condiciones reales de operación y sustenta su aporte individual dentro del producto U2.</p>
+<h3 id="13-producto-de-sesion">1.3 Producto de sesión</h3>
+<p>Sistema robusto validado: comunicación síncrona, seguridad, mensajería, consistencia distribuida, observabilidad e integración frontend.</p>
+<h3 id="14-preguntas-del-docente-durante-la-sustentacion">1.4 Preguntas del docente durante la sustentación</h3>
+<p>Un sistema distribuido robusto debe funcionar cuando hay usuarios, errores, múltiples servicios, eventos, seguridad y necesidad de diagnóstico. Esta evaluación valida el sistema en condiciones integradas.</p>
+<p>Preguntas que el docente puede realizar a cada estudiante:</p>
+<ol>
+<li>Cómo se protege el sistema?</li>
+<li>Qué flujo demuestra comunicación entre servicios?</li>
+<li>Qué evidencia muestra mensajería asíncrona?</li>
+<li>Cómo se diagnostica un fallo?</li>
+<li>Cuál fue tu aporte individual?</li>
+</ol>
+<h3 id="15-ubicacion-en-el-curso">1.5 Ubicación en el curso</h3>
+<ul>
+<li>Unidad: U2 - Sistema distribuido robusto.</li>
+<li>Producto de unidad: sistema distribuido seguro, resiliente, consistente, observable e integrado con cliente frontend.</li>
+<li>Avance del producto en esta sesión: evaluación integradora de la Unidad 2.</li>
+</ul>
+<h2 id="2-encuadre-de-la-evaluacion">2. Encuadre de la evaluación</h2>
+<p>Tiempo: 10 min.</p>
+<p>El docente presenta brevemente la arquitectura del producto de unidad, recuerda la distribución de tiempo por equipo y pasa directamente a las exposiciones.</p>
+<h3 id="21-arquitectura-del-producto-de-unidad">2.1 Arquitectura del producto de unidad</h3>
+<pre class="mermaid"><code>flowchart LR
+    Front["ecom-ng"]
+    Gateway["Gateway"]
+    Auth["auth-ms"]
+    Producto["producto-ms"]
+    Catalogo["catalogo-ms"]
+    Orden["orden-ms"]
+    Pago["pago-ms"]
+    Broker["Kafka"]
+    Obs["Observabilidad"]
+
+    Front --&gt; Gateway
+    Gateway --&gt; Auth
+    Gateway --&gt; Producto
+    Gateway --&gt; Orden
+    Producto --&gt; Catalogo
+    Orden --&gt; Broker
+    Broker --&gt; Pago
+    Pago --&gt; Broker
+    Gateway -. logs/metrics .-&gt; Obs</code></pre>
+<h3 id="22-tiempo-de-exposicion-por-equipo">2.2 Tiempo de exposición por equipo</h3>
+<p>Cada grupo dispone de hasta 18 minutos:</p>
+<ul>
+<li>10 minutos de exposición del proyecto U2.</li>
+<li>5 minutos de demo técnica.</li>
+<li>3 minutos de preguntas del docente a integrantes del equipo.</li>
+</ul>
+<h2 id="3-presentacion-y-sustentacion-del-producto">3. Presentación y sustentación del producto</h2>
+<p>Tiempo: 3h 45 min para la ronda de evaluación de equipos.</p>
+<p>En esta sesión se realiza la exposición y evaluación práctica. Cada equipo dispone de hasta 18 minutos para presentar el producto U2, mostrar la demo y responder preguntas. La rúbrica se aplica al cierre de la exposición de cada equipo.</p>
+<h3 id="31-plantilla-de-entrega">3.1 Plantilla de entrega</h3>
+<p>La evaluación U2 requiere tres entregables:</p>
+<ol>
+<li>Documentación en MkDocs o herramienta equivalente del avance U2 del proyecto final, organizada por sesiones y con guías reproducibles.</li>
+<li>PDF grupal de la evaluación generado como impresion o exportacion de la documentación y subido a la plataforma BLearning (BL).</li>
+<li>Presentación del proyecto U2 (PPT o equivalente) subida a BL.</li>
+</ol>
+<p>El link de la documentación debe aparecer en el <code>index</code> del PDF. La documentación no presenta productos aislados de sesión: organiza el avance U2 del proyecto final usando S06, S07, S08, S09, S10, S11 y S12 como estructura de evidencias. Para la unidad, el equipo debe juntar e integrar los productos de sesión desarrollados por todos los integrantes en una rama común del equipo. No basta con mostrar ramas o PR separados: debe evidenciarse el merge o integración, la resolución de conflictos si aplica y la ejecución del sistema integrado. Además, el repositorio GitHub debe evidenciar el aporte o participación individual de cada integrante mediante commits, ramas, merges o pull requests de código y documentación. Esa evidencia debe incluirse también en la documentación como anexos, un anexo por integrante, para que al imprimir o exportar el sitio se genere un PDF ordenado. Cada integrante debe mostrar una demo de la parte que trabajó.</p>
+<p>El PDF de esta evaluación debe ser la impresion o exportacion directa del sitio de documentación. No se acepta un PDF armado manualmente fuera de la documentación.</p>
+<p>Entrega el PDF grupal:</p>
+<div class="highlight"><pre><span></span><code>S12_Equipo##_U2_Docs.pdf
+</code></pre></div>
+<p>Entrega la presentación con el siguiente nombre:</p>
+<div class="highlight"><pre><span></span><code>U2_Equipo##_Presentación.pdf
+</code></pre></div>
+<p>La documentación debe estar en el repositorio GitHub y publicarse como sitio navegable, por ejemplo en GitHub Pages (<code>github.io</code>) u otra plataforma equivalente. Si usan MkDocs, también pueden verificarla localmente con <code>mkdocs serve</code>.</p>
+<h4 id="311-datos-del-equipo">3.1.1 Datos del equipo</h4>
+<ul>
+<li>Equipo:</li>
+<li>Sesión: S12 - Evaluación U2</li>
+<li>Proyecto:</li>
+<li>Link de GitHub:</li>
+<li>Link de documentación:</li>
+<li>Rama integrada evaluada:</li>
+<li>Evidencia de integración o merge:</li>
+<li>Integrantes:</li>
+<li>Productos de sesión integrados por el equipo:</li>
+<li>Anexos individuales incluidos:</li>
+</ul>
+<h4 id="312-evidencia-tecnica-del-avance-u2">3.1.2 Evidencia técnica del avance U2</h4>
+<ul>
+<li>Seguridad: login, token y ruta protegida.</li>
+<li>Comunicación síncrona entre servicios.</li>
+<li>Eventos o consistencia distribuida.</li>
+<li>Observabilidad: health, logs, métricas o panel.</li>
+<li>Frontend integrado mediante Gateway.</li>
+<li>Avance del proyecto final correspondiente a U2.</li>
+</ul>
+<h4 id="313-presentacion-del-proyecto-u2">3.1.3 Presentación del proyecto U2</h4>
+<p>La presentación debe incluir:</p>
+<ul>
+<li>Nombre del proyecto y equipo.</li>
+<li>Arquitectura robusta U2.</li>
+<li>Flujo seguro con JWT.</li>
+<li>Comunicación síncrona entre servicios.</li>
+<li>Mensajería, consistencia eventual y estados finales.</li>
+<li>Observabilidad y diagnóstico.</li>
+<li>Integración frontend.</li>
+<li>Aporte individual de cada integrante.</li>
+<li>Evidencia de participación individual de cada integrante en GitHub.</li>
+<li>Demo asignada a cada integrante.</li>
+</ul>
+<h4 id="314-documentacion-en-mkdocs-o-herramienta-equivalente">3.1.4 Documentación en MkDocs o herramienta equivalente</h4>
+<p>La documentación debe seguir una estructura ordenada por sesión y anexos. Cada sesión documenta el avance del proyecto final que corresponde a esa etapa y debe integrar los aportes realizados por los integrantes del equipo:</p>
+<ul>
+<li>S06: comunicación síncrona resiliente.</li>
+<li>S07: seguridad distribuida y JWT.</li>
+<li>S08: mensajería asíncrona.</li>
+<li>S09: consistencia distribuida.</li>
+<li>S10: observabilidad y diagnóstico.</li>
+<li>S11: integración frontend.</li>
+<li>S12: validación integrada U2.</li>
+<li>Anexos: evidencia de participación individual, un anexo por integrante.</li>
+</ul>
+<p>Cada guía debe contener comandos, puertos, rutas probadas, datos de prueba, evidencias esperadas y errores frecuentes. El <code>index</code> debe incluir el link de la documentación publicada o ejecutable.</p>
+<p>Cada anexo individual debe contener:</p>
+<ul>
+<li>Nombre del integrante.</li>
+<li>Rol o responsabilidad.</li>
+<li>Rama de trabajo, commits, merges o PR de código.</li>
+<li>Rama de trabajo, commits, merges o PR de documentación.</li>
+<li>Evidencia breve de la parte que demostrará en vivo.</li>
+<li>Evidencia de que su aporte quedó integrado en la rama común del equipo.</li>
+</ul>
+<h3 id="32-secuencia-sugerida-de-presentacion">3.2 Secuencia sugerida de presentación</h3>
+<ol>
+<li>Presentar nombre del proyecto, equipo y repositorio GitHub.</li>
+<li>Explicar la arquitectura U2 usando el diagrama del producto.</li>
+<li>Mostrar login, token y ruta protegida.</li>
+<li>Mostrar comunicación síncrona entre servicios.</li>
+<li>Mostrar mensajería, consistencia eventual y estado final.</li>
+<li>Mostrar integración frontend y evidencia operacional.</li>
+<li>Mostrar participación de cada integrante en GitHub.</li>
+<li>Cada integrante muestra la parte que trabajó.</li>
+<li>Cerrar con hallazgos, problemas y decisiones técnicas.</li>
+</ol>
+<h3 id="33-criterios-minimos-de-aceptacion">3.3 Criterios mínimos de aceptación</h3>
+<ul>
+<li>PDF grupal generado desde la documentación y subido a BL con nombre correcto.</li>
+<li>Presentación del proyecto U2 subida a BL.</li>
+<li>Documentación en MkDocs o herramienta equivalente con guías reproducibles de S06 a S12.</li>
+<li>Evidencia del avance U2 del proyecto final integrado.</li>
+<li>Seguridad demostrada.</li>
+<li>Eventos o consistencia demostrados.</li>
+<li>Observabilidad demostrada.</li>
+<li>Aporte individual verificable.</li>
+<li>Productos de sesión de todos los integrantes integrados en el avance U2.</li>
+<li>Rama común del equipo con aportes integrados y ejecutables.</li>
+<li>Evidencia de merge, integración o resolución de conflictos cuando aplique.</li>
+<li>La documentación incluye anexos de participación individual, uno por integrante.</li>
+<li>GitHub evidencia aporte individual de cada integrante mediante ramas, commits, merges o PR de código y documentación.</li>
+<li>Cada integrante demuestra en vivo la parte que trabajó.</li>
+</ul>
+<h2 id="4-retroalimentacion-posterior">4. Retroalimentacion posterior</h2>
+<p>Tiempo: 4h fuera del aula.</p>
+<h3 id="41-mejoras-y-recomendaciones-para-la-siguiente-unidad">4.1 Mejoras y recomendaciones para la siguiente unidad</h3>
+<p>Después de la evaluación, cada estudiante debe implementar las mejoras y recomendaciones recibidas. Esta actividad no forma parte de la calificación de la evaluación U2; sirve como preparación para la siguiente unidad.</p>
+<p>Trabajo autónomo:</p>
+<ol>
+<li>Corregir observaciones detectadas en la exposición.</li>
+<li>Completar o ajustar la documentación.</li>
+<li>Mejorar evidencias individuales incompletas.</li>
+<li>Registrar en GitHub los cambios posteriores a la evaluación.</li>
+<li>Preparar una breve reflexión técnica sobre la mejora aplicada.</li>
+</ol>
+<h2 id="5-rubrica-de-evaluacion">5. Rúbrica de evaluación</h2>
+<p>La rúbrica evalúa el entregable y la sustentación del producto U2 presentados durante la sesión.</p>
+<table>
+<thead>
+<tr>
+<th>Dimensión</th>
+<th style="text-align: right;">Peso</th>
+<th>3 - Logro destacado</th>
+<th>2 - Logro</th>
+<th>1 - Proceso</th>
+<th>0 - Inicio</th>
+<th style="text-align: right;">Puntuación obtenida</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Integración del producto U2</td>
+<td style="text-align: right;">2</td>
+<td>Integra los productos de S06-S12 y los aportes de todos los integrantes sobre el producto U1 en un sistema robusto funcionando como un todo.</td>
+<td>Integra los componentes principales del producto U2.</td>
+<td>La integración de componentes o aportes es parcial.</td>
+<td>No evidencia integración.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>2. Funcionamiento técnico U2</td>
+<td style="text-align: right;">2</td>
+<td>Demuestra seguridad, comunicación síncrona, mensajería asíncrona, consistencia distribuida, observabilidad e integración frontend.</td>
+<td>Demuestra el funcionamiento de los componentes principales de U2.</td>
+<td>El funcionamiento es parcial o presenta fallos relevantes.</td>
+<td>No demuestra el funcionamiento del producto U2.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>3. Pruebas, evidencia y diagnóstico</td>
+<td style="text-align: right;">2</td>
+<td>Ejecuta pruebas reproducibles, evidencia estados y eventos, y diagnostica fallos mediante logs, métricas, trazas o paneles.</td>
+<td>Presenta pruebas y evidencia suficientes, y explica la causa probable de un fallo.</td>
+<td>Las pruebas, evidencias o el diagnóstico son incompletos.</td>
+<td>No presenta evidencia verificable ni diagnostica.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>4. Aporte individual, GitHub y demo</td>
+<td style="text-align: right;">2</td>
+<td>El aporte individual de código y documentación es verificable en GitHub y anexos, está integrado en la rama común y se demuestra en vivo con autonomía.</td>
+<td>El aporte es identificable, está integrado y se demuestra adecuadamente.</td>
+<td>El aporte es poco trazable, no esta claramente integrado o la demo es parcial.</td>
+<td>No se identifica ni demuestra el aporte individual.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>5. Defensa técnica</td>
+<td style="text-align: right;">1</td>
+<td>Explica decisiones y responde las preguntas con precisión, autonomía y criterio técnico.</td>
+<td>Explica las decisiones principales y responde adecuadamente.</td>
+<td>Responde parcialmente o con escaso sustento técnico.</td>
+<td>No sustenta su trabajo.</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>6. Presentación, documentación y reproducibilidad</td>
+<td style="text-align: right;">1</td>
+<td>Presentación clara; sitio y PDF ordenados por S06-S12, con guías reproducibles, enlace en el index y anexos individuales completos.</td>
+<td>La presentación y la documentación permiten comprender y reproducir el flujo principal.</td>
+<td>La presentación es poco clara o la documentación es incompleta y poco reproducible.</td>
+<td>No presenta documentación o presentación suficiente.</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Puntuación acumulada = suma de (<code>Peso</code> * <code>Puntuacion obtenida</code>) = ____.</p>
+<p>Nota final = (<code>Puntuacion acumulada</code> / 30) * 20 = ____.</p>
+<p>Para usar la rúbrica con IA, solicita:</p>
+<div class="highlight"><pre><span></span><code>Evalúa el PDF, la presentación, la documentación, la participación en GitHub y la demo individual usando la rúbrica de la sesión.
+Para cada dimensión selecciona la puntuación obtenida usando la escala Inicio=0, Proceso=1, Logro=2, Logro destacado=3.
+Justifica brevemente cada puntuación.
+Calcula la puntuación acumulada con la fórmula: suma de (Peso * Puntuación obtenida).
+Calcula la nota final sobre 20 con la fórmula: (Puntuación acumulada / 30) * 20.
+Indica 2 fortalezas y 2 recomendaciones.
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/mermaid.js"></script>
+      
+    
+  </body>
+</html>

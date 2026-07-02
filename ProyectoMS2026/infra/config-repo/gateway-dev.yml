@@ -1,0 +1,113 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        # AUTH
+        - id: auth-route
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
+        - id: auth-swagger
+          uri: lb://auth
+          predicates:
+            - Path=/auth/swagger-ui/**,/auth/v3/api-docs/**,/auth/swagger-ui.html
+          filters:
+            - RewritePath=/auth(?<segment>/?.*), $\{segment}
+
+        - id: catalogo-route
+          uri: lb://catalogo
+          predicates:
+            - Path=/api/v1/categorias/**
+        - id: catalogo-instancia
+          uri: lb://catalogo
+          predicates:
+            - Path=/api/v1/catalogo/instancia
+        - id: catalogo-swagger
+          uri: lb://catalogo
+          predicates:
+            - Path=/catalogo/swagger-ui/**,/catalogo/v3/api-docs/**,/catalogo/swagger-ui.html
+          filters:
+            - RewritePath=/catalogo(?<segment>/?.*), $\{segment}
+
+        # PRODUCTO
+        - id: producto-route
+          uri: lb://producto
+          predicates:
+            - Path=/api/v1/productos/**
+        - id: producto-instancia
+          uri: lb://producto
+          predicates:
+            - Path=/api/v1/producto/instancia
+        - id: producto-swagger
+          uri: lb://producto
+          predicates:
+            - Path=/producto/swagger-ui/**,/producto/v3/api-docs/**,/producto/swagger-ui.html
+          filters:
+            - RewritePath=/producto(?<segment>/?.*), $\{segment}
+
+        - id: pedido-route
+          uri: lb://pedido
+          predicates:
+            - Path=/api/v1/pedidos/**
+        - id: pedido-instancia
+          uri: lb://pedido
+          predicates:
+            - Path=/api/v1/pedido/instancia
+        - id: pedido-swagger
+          uri: lb://pedido
+          predicates:
+            - Path=/pedido/swagger-ui/**,/pedido/v3/api-docs/**,/pedido/swagger-ui.html
+          filters:
+            - RewritePath=/pedido(?<segment>/?.*), $\{segment}
+
+        - id: pago-route
+          uri: lb://pago
+          predicates:
+            - Path=/api/v1/pagos/**
+        - id: pago-instancia
+          uri: lb://pago
+          predicates:
+            - Path=/api/v1/pago/instancia
+        - id: pago-swagger
+          uri: lb://pago
+          predicates:
+            - Path=/pago/swagger-ui/**,/pago/v3/api-docs/**,/pago/swagger-ui.html
+          filters:
+            - RewritePath=/pago(?<segment>/?.*), $\{segment}
+
+        - id: carrito-route
+          uri: lb://carrito
+          predicates:
+            - Path=/api/v1/carritos/**
+        - id: carrito-instancia
+          uri: lb://carrito
+          predicates:
+            - Path=/api/v1/carrito/instancia
+        - id: carrito-swagger
+          uri: lb://carrito
+          predicates:
+            - Path=/carrito/swagger-ui/**,/carrito/v3/api-docs/**,/carrito/swagger-ui.html
+          filters:
+            - RewritePath=/carrito(?<segment>/?.*), $\{segment}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7081/eureka
+
+jwt:
+  secret: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWYwMTIzNDU2Nzg5YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZg==
+  issuer: auth
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,circuitbreakers,circuitbreakerevents
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true

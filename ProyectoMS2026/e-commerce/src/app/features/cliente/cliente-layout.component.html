@@ -1,0 +1,40 @@
+<div class="store-shell">
+  @if (toast.message(); as t) {
+    <div class="global-toast" [class]="t.type">{{ t.text }}</div>
+  }
+  <header class="store-nav">
+    <div class="store-nav-inner">
+      <div class="store-nav-left">
+        <a class="brand" routerLink="/">
+          <img class="brand-icon" src="/images/logo-proyecto.png" alt="" width="52" height="52" />
+          <span>TechStore</span>
+        </a>
+
+        <nav class="store-menu">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+        <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+        <a routerLink="/carrito" routerLinkActive="active">Carrito</a>
+        <a routerLink="/cliente/pedidos" routerLinkActive="active">Mis pedidos</a>
+        <a routerLink="/cliente/pagos" routerLinkActive="active">Mis pagos</a>
+      </nav>
+      </div>
+
+      <div class="store-actions">
+        <a class="icon-link" routerLink="/carrito" aria-label="Carrito">
+          🛒
+          @if (cart.itemCount() > 0) {
+            <span class="cart-badge">{{ cart.itemCount() }}</span>
+          }
+        </a>
+        <div class="user-session">
+          <app-user-menu />
+          <button type="button" class="btn-nav ghost logout-btn" (click)="auth.logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="cliente-content">
+    <router-outlet />
+  </main>
+</div>

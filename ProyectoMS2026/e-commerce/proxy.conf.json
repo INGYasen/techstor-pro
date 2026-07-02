@@ -1,0 +1,23 @@
+{
+  "/auth": {
+    "target": "http://localhost:7091",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/api": {
+    "target": "http://localhost:7091",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/nominatim": {
+    "target": "https://nominatim.openstreetmap.org",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/nominatim": ""
+    },
+    "headers": {
+      "User-Agent": "TechStore-UPEU-ECommerce/1.0 (localhost:4200; ecommerce@upeu.edu.pe)"
+    }
+  }
+}

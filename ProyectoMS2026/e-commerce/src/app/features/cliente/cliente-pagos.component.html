@@ -1,0 +1,228 @@
+<section class="cliente-page cliente-pagos-page">
+  <header class="page-hero">
+    <div>
+      <h1>Mis pagos</h1>
+      <p>
+        @if (!loading() && pagos().length) {
+          {{ pagos().length }} pago{{ pagos().length === 1 ? '' : 's' }} registrado{{ pagos().length === 1 ? '' : 's' }}
+        } @else {
+          Historial de pagos realizados en tus compras
+        }
+      </p>
+    </div>
+    <button type="button" class="btn primary refresh-btn" (click)="cargar()">
+      <span aria-hidden="true">↻</span> Actualizar
+    </button>
+  </header>
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state">Cargando pagos...</div>
+  } @else if (!pagos().length) {
+    <div class="empty-box">
+      <div class="empty-icon">💳</div>
+      <h3>Aún no tienes pagos</h3>
+      <p>Completa una compra desde el carrito para ver aquí el método, monto y comprobante.</p>
+      <a routerLink="/carrito" class="btn primary">Ir al carrito</a>
+    </div>
+  } @else {
+    <div class="payments-table-wrap">
+      <table class="payments-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Pedido</th>
+            <th>Monto</th>
+            <th>Método</th>
+            <th>Estado</th>
+            <th>Comprobante</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pago of pagos(); track pago.id) {
+            <tr>
+              <td class="col-id">
+                <span class="pay-id">{{ pago.id }}</span>
+              </td>
+              <td class="col-date">
+                @if (pago.fechaPago) {
+                  <span class="date-line">{{ pago.fechaPago | date: 'dd/MM/y' }}</span>
+                  <span class="time-line">{{ pago.fechaPago | date: 'h:mm a' }}</span>
+                } @else {
+                  <span class="date-empty">Sin registrar</span>
+                }
+              </td>
+              <td class="col-order">
+                <a routerLink="/cliente/pedidos" class="order-link">{{ pago.idPedido }}</a>
+              </td>
+              <td class="col-amount">
+                <strong>S/ {{ pago.monto | number: '1.2-2' }}</strong>
+              </td>
+              <td class="col-method">
+                <div class="method-cell">
+                  <span class="method-icon" [class]="claseMetodo(pago.metodo)">
+                    @if (imagenMetodo(pago.metodo); as src) {
+                      <img [src]="src" [alt]="etiquetaMetodo(pago.metodo)" />
+                    } @else {
+                      <span class="brand-fallback" aria-hidden="true">{{ iconoMetodoFallback(pago.metodo) }}</span>
+                    }
+                  </span>
+                  <span class="method-name">{{ etiquetaMetodo(pago.metodo) }}</span>
+                </div>
+              </td>
+              <td class="col-status">
+                <span class="estado-badge" [class]="claseEstado(pago.estado)">
+                  {{ etiquetaEstado(pago.estado) }}
+                </span>
+              </td>
+              <td class="col-receipt">
+                <button type="button" class="receipt-btn" (click)="verComprobante(pago)">
+                  <span class="receipt-icon" aria-hidden="true">📄</span>
+                  Ver
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
+
+@if (comprobantePago(); as pago) {
+  @let pedido = pedidoDePago(pago);
+  <div class="modal-backdrop" (click)="cerrarComprobante()"></div>
+  <div class="receipt-modal" role="dialog" aria-modal="true" aria-labelledby="comprobante-titulo">
+    <header class="receipt-hero">
+      <div class="receipt-hero-main">
+        <div class="receipt-logo" aria-hidden="true">
+          <img src="/images/logo-proyecto.png" alt="" />
+        </div>
+        <div>
+          <p class="receipt-brand">TechStore</p>
+          <h2 id="comprobante-titulo">Comprobante de pago</h2>
+          <div class="receipt-chips">
+            <span class="receipt-chip">Pago {{ pago.id }}</span>
+            <span class="receipt-chip">Pedido {{ pago.idPedido }}</span>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="close-btn" (click)="cerrarComprobante()" aria-label="Cerrar">×</button>
+    </header>
+
+    <div class="receipt-info-grid">
+      <div class="info-card">
+        <span class="info-icon" aria-hidden="true">📅</span>
+        <div class="info-body">
+          <span class="info-label">Fecha</span>
+          <strong class="info-value">
+            @if (pago.fechaPago) {
+              {{ pago.fechaPago | date: 'd MMM y' }}<br />
+              <small>{{ pago.fechaPago | date: 'h:mm a' }}</small>
+            } @else {
+              Sin registrar
+            }
+          </strong>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span class="info-icon info-icon--brand" [class]="claseMetodo(pago.metodo)">
+          @if (imagenMetodo(pago.metodo); as src) {
+            <img [src]="src" [alt]="etiquetaMetodo(pago.metodo)" />
+          } @else {
+            <span aria-hidden="true">{{ iconoMetodoFallback(pago.metodo) }}</span>
+          }
+        </span>
+        <div class="info-body">
+          <span class="info-label">Método</span>
+          <strong class="info-value">{{ etiquetaMetodo(pago.metodo) }}</strong>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span class="info-icon info-icon--status" [class]="claseEstado(pago.estado)" aria-hidden="true">✓</span>
+        <div class="info-body">
+          <span class="info-label">Estado</span>
+          <span class="estado-badge" [class]="claseEstado(pago.estado)">{{ etiquetaEstado(pago.estado) }}</span>
+        </div>
+      </div>
+
+      @if (pedido?.cliente) {
+        <div class="info-card">
+          <span class="info-icon" aria-hidden="true">👤</span>
+          <div class="info-body">
+            <span class="info-label">Cliente</span>
+            <strong class="info-value">{{ pedido!.cliente }}</strong>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (pedido?.direccionEnvio) {
+      <div class="receipt-shipping">
+        <span class="shipping-icon" aria-hidden="true">📍</span>
+        <div>
+          <span class="info-label">Dirección de envío</span>
+          <p>{{ pedido!.direccionEnvio }}</p>
+        </div>
+      </div>
+    }
+
+    @if (pedido?.items?.length) {
+      <div class="receipt-section">
+        <h3 class="receipt-section-title">
+          <span class="section-icon" aria-hidden="true">🛍️</span>
+          Detalle de la compra
+        </h3>
+        <div class="receipt-items">
+          <div class="receipt-items-head">
+            <span>Producto</span>
+            <span>P. unit.</span>
+            <span>Cant.</span>
+            <span>Subtotal</span>
+          </div>
+          @for (item of pedido!.items; track item.id ?? item.productoId) {
+            <div class="receipt-items-row">
+              <div class="receipt-product">
+                <div class="product-thumb">
+                  @if (imagenItem(item); as src) {
+                    <img [src]="src" [alt]="itemLabel(item)" loading="lazy" />
+                  } @else {
+                    <span class="thumb-fallback" aria-hidden="true">📦</span>
+                  }
+                </div>
+                <span class="product-name">{{ itemLabel(item) }}</span>
+              </div>
+              <span class="cell-money">S/ {{ itemPrecioUnitario(item) | number: '1.2-2' }}</span>
+              <span class="cell-qty">{{ item.cantidad }}</span>
+              <span class="cell-money cell-subtotal">S/ {{ itemPrecio(item) | number: '1.2-2' }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="receipt-empty-products">
+        <span aria-hidden="true">📦</span>
+        <p>No se encontró el detalle de productos de este pedido.</p>
+      </div>
+    }
+
+    <footer class="receipt-footer">
+      <div class="receipt-total-box">
+        <span class="total-label">Total pagado</span>
+        <strong>S/ {{ pago.monto | number: '1.2-2' }}</strong>
+      </div>
+      <div class="receipt-actions">
+        <button type="button" class="btn outline" (click)="cerrarComprobante()">Cerrar</button>
+        <button type="button" class="btn primary" (click)="imprimirComprobante(pago)">
+          <span aria-hidden="true">🖨️</span> Imprimir
+        </button>
+      </div>
+    </footer>
+  </div>
+}

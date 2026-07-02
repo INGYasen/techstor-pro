@@ -1,0 +1,186 @@
+<section class="admin-page">
+  <header class="page-header">
+    <div class="page-header-text">
+      <h2>Pagos de clientes</h2>
+      <p class="page-sub">Revisa y valida los pagos asociados a cada pedido de la tienda.</p>
+    </div>
+    <button type="button" class="btn-refresh" (click)="cargar()" [disabled]="loading()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.1A6 6 0 1 1 12 6c1.66 0 3.14.67 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+      Actualizar
+    </button>
+  </header>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  <div class="stats-row">
+    <article class="stat-card stat-total">
+      <div class="stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V8h16v10z"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-label">Total pagos</span>
+        <strong>{{ pagos().length }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-ok">
+      <div class="stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-label">Aprobados</span>
+        <strong>{{ contarPorEstado('APROBADO') }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-warn">
+      <div class="stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-label">Pendientes</span>
+        <strong>{{ contarPorEstado('PENDIENTE') }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-info">
+      <div class="stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-label">Monto aprobado</span>
+        <strong>S/ {{ totalAprobado() | number: '1.2-2' }}</strong>
+      </div>
+    </article>
+  </div>
+
+  <div class="table-panel">
+    <div class="table-toolbar">
+      <div class="toolbar-title">
+        <h3>Pagos registrados</h3>
+        <span class="count-badge">{{ pagosVisibles().length }}</span>
+      </div>
+      <div class="table-filters">
+        <label class="search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input
+            placeholder="Buscar por #, pedido o referencia"
+            [value]="busqueda()"
+            (input)="busqueda.set($any($event.target).value)"
+          />
+        </label>
+        <select class="filter-select" [value]="filtroEstado()" (change)="filtroEstado.set($any($event.target).value)">
+          <option value="TODOS">Todos los estados</option>
+          @for (e of estados; track e) {
+            <option [value]="e">{{ e }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="state-box">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Cargando pagos...</p>
+      </div>
+    } @else if (!pagos().length) {
+      <div class="state-box">
+        <p>Aún no hay pagos registrados por los clientes.</p>
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="col-id">Pago</th>
+              <th class="col-pedido">Pedido</th>
+              <th class="col-cliente">Cliente</th>
+              <th class="col-total">Monto</th>
+              <th class="col-pago">Método</th>
+              <th class="col-estado">Estado</th>
+              <th class="col-fecha">Fecha</th>
+              <th class="col-ref">Referencia</th>
+              <th class="col-actions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pago of pagosVisibles(); track pago.id) {
+              <tr>
+                <td class="col-id"><span class="id-tag">#{{ pago.id }}</span></td>
+                <td class="col-pedido"><span class="id-tag muted">#{{ pago.idPedido }}</span></td>
+                <td class="col-cliente">{{ nombreCliente(pago.idPedido) }}</td>
+                <td class="col-total money">S/ {{ pago.monto | number: '1.2-2' }}</td>
+                <td class="col-pago">
+                  <span class="metodo-pill">{{ pago.metodo }}</span>
+                </td>
+                <td class="col-estado">
+                  <span class="estado-badge" [class]="'estado-' + pago.estado.toLowerCase()">
+                    {{ pago.estado }}
+                  </span>
+                </td>
+                <td class="col-fecha">{{ pago.fechaPago ? (pago.fechaPago | date: 'dd/MM/yy, h:mm a') : '—' }}</td>
+                <td class="col-ref">
+                  <span class="ref-text">{{ pago.referenciaTransaccion || '—' }}</span>
+                </td>
+                <td class="col-actions">
+                  <button type="button" class="btn-action primary" (click)="abrirDetalle(pago)">Validar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+@if (pagoSeleccionado(); as pago) {
+  <div class="modal-backdrop" (click)="cerrarDetalle()"></div>
+  <div class="modal" role="dialog" aria-labelledby="pago-modal-title">
+    <header class="modal-header">
+      <div>
+        <h3 id="pago-modal-title">Pago #{{ pago.id }}</h3>
+        <p class="modal-sub">Pedido #{{ pago.idPedido }} · {{ nombreCliente(pago.idPedido) }}</p>
+      </div>
+      <button type="button" class="modal-close" (click)="cerrarDetalle()" aria-label="Cerrar">×</button>
+    </header>
+
+    <div class="detail-grid">
+      <div>
+        <span class="detail-label">Monto</span>
+        <p class="detail-total">S/ {{ pago.monto | number: '1.2-2' }}</p>
+      </div>
+      <div>
+        <span class="detail-label">Método</span>
+        <p>{{ pago.metodo }}</p>
+      </div>
+      <div>
+        <span class="detail-label">Fecha</span>
+        <p>{{ pago.fechaPago ? (pago.fechaPago | date: 'medium') : '—' }}</p>
+      </div>
+    </div>
+
+    <form class="modal-form" [formGroup]="validacionForm" (ngSubmit)="guardarValidacion()">
+      <label>
+        Estado del pago
+        <select formControlName="estado">
+          @for (estado of estados; track estado) {
+            <option [value]="estado">{{ estado }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Referencia de transacción
+        <input formControlName="referenciaTransaccion" placeholder="Código Yape, Plin, etc." />
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn-action secondary wide" (click)="cerrarDetalle()">Cerrar</button>
+        <button type="submit" class="btn-action primary wide" [disabled]="saving()">
+          {{ saving() ? 'Guardando...' : 'Guardar validación' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}

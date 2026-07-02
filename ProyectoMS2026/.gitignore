@@ -1,0 +1,101 @@
+# ===== Maven =====
+target/
+**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ===== Gradle (por si acaso) =====
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# ===== IDE: IntelliJ IDEA =====
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ===== IDE: Eclipse =====
+.project
+.classpath
+.settings/
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+
+# ===== IDE: VS Code =====
+.vscode/
+
+# ===== IDE: NetBeans =====
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# ===== Logs =====
+logs/
+**/logs/
+*.log
+*.log.*
+spring.log
+hs_err_pid*
+
+# ===== Sistema operativo =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Java =====
+*.class
+*.jar
+!**/.mvn/wrapper/maven-wrapper.jar
+!**/mvnw.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# ===== Docker volumenes locales =====
+**/data/
+**/volumes/
+**/.docker/
+
+# ===== Variables sensibles =====
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ===== Temporales =====
+*.swp
+*.swo
+*~
+.tmp/
+tmp/
+
+# ===== Cobertura / Reportes =====
+coverage/
+.nyc_output/
+*.lcov
+
+# ===== Node (frontend si aplica) =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== MkDocs build output =====
+docs-site/site/
+_site-deploy/

@@ -1,0 +1,249 @@
+<div class="home-page">
+  <section class="home-hero-full">
+    <div class="hero-bg" aria-hidden="true">
+      <div
+        class="hero-bg-track"
+        [style.transform]="'translateX(-' + fondoActual() * 100 + '%)'"
+      >
+        @for (fondo of fondosHero; track $index) {
+          <div class="hero-bg-slide">
+            <img [src]="fondo" alt="" loading="eager" />
+          </div>
+        }
+      </div>
+      <div class="hero-bg-overlay"></div>
+    </div>
+
+    <div class="hero-intro">
+      <p class="welcome-kicker">Tecnología al mejor precio</p>
+      <h1>Bienvenido a <span class="accent">TechStore</span></h1>
+      <p class="hero-lead">
+        Laptops, audífonos, periféricos y más. Envío a todo el Perú · Yape, Plin y tarjeta.
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/catalogo" class="btn primary">Explorar catálogo</a>
+        @if (!auth.isLoggedIn()) {
+          <a routerLink="/login" class="btn outline">Iniciar sesión</a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="home-showcase-section">
+    <div class="page-block showcase-top">
+      <span class="section-label">Destacados</span>
+      <h2>Lo más vendido</h2>
+    </div>
+
+    @if (loadingProductos()) {
+      <div class="page-block showcase-loading">
+        <div class="loader-ring"></div>
+        <p>Cargando productos...</p>
+      </div>
+    } @else if (!productos().length) {
+      <p class="page-block showcase-empty">Pronto verás aquí los productos del catálogo.</p>
+    } @else {
+      <div class="showcase-carousel">
+        <div class="slides-viewport">
+          <button type="button" class="nav-edge prev" (click)="anterior()" aria-label="Anterior producto">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          </button>
+
+          <div
+            class="slides-track"
+            [style.transform]="'translateX(-' + slideActual() * 100 + '%)'"
+          >
+            @for (producto of productos(); track producto.id; let i = $index) {
+              <article class="slide" [attr.aria-hidden]="slideActual() !== i">
+                <div class="slide-copy">
+                  @if (esOferta(producto)) {
+                    <span class="pill offer">Oferta</span>
+                  } @else {
+                    <span class="pill featured">Destacado</span>
+                  }
+
+                  <p class="slide-category">{{ categoriaProducto(producto) }}</p>
+                  <h3 class="slide-title">{{ producto.nombre }}</h3>
+
+                  @if (descripcionVisible(producto.descripcion); as desc) {
+                    <p class="slide-desc">{{ desc }}</p>
+                  } @else {
+                    <p class="slide-desc">Potencia para tu día a día. Ideal para estudiar, trabajar y entretenerte.</p>
+                  }
+
+                  <ul class="slide-specs">
+                    <li>
+                      <span class="spec-icon" aria-hidden="true">⚡</span>
+                      <span>Stock: {{ producto.stock }} uds.</span>
+                    </li>
+                    <li>
+                      <span class="spec-icon" aria-hidden="true">🚚</span>
+                      <span>Envío a todo el Perú</span>
+                    </li>
+                    <li>
+                      <span class="spec-icon" aria-hidden="true">🛡️</span>
+                      <span>Garantía TechStore</span>
+                    </li>
+                    <li>
+                      <span class="spec-icon" aria-hidden="true">💳</span>
+                      <span>Yape, Plin y tarjeta</span>
+                    </li>
+                  </ul>
+
+                  <div class="slide-pricing">
+                    <div class="price-row">
+                      <span class="slide-price">S/ {{ producto.precio | number: '1.2-2' }}</span>
+                      @if (esOferta(producto)) {
+                        <span class="price-old">S/ {{ precioAnterior(producto) | number: '1.2-2' }}</span>
+                        <span class="price-discount">-{{ descuentoPorcentaje(producto) }}%</span>
+                      }
+                    </div>
+                    @if (producto.stock > 0) {
+                      <span class="stock-dot"><span class="dot-pulse"></span> En stock</span>
+                    }
+                  </div>
+
+                  <a [routerLink]="['/producto', producto.id]" class="slide-cta">
+                    Ver producto
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                  </a>
+                </div>
+
+                <div class="slide-visual">
+                  <div class="slide-stage" aria-hidden="true">
+                    <div class="stage-glow"></div>
+                    <div class="stage-ring"></div>
+                    <div class="stage-particles"></div>
+                    <div class="stage-card">
+                      <img [src]="imagenProducto(producto)!" [alt]="producto.nombre" loading="lazy" />
+                    </div>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+
+          <button type="button" class="nav-edge next" (click)="siguiente()" aria-label="Siguiente producto">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+          </button>
+
+          <div class="showcase-pagination" role="tablist" aria-label="Productos destacados">
+            @for (producto of productos(); track producto.id; let i = $index) {
+              <button
+                type="button"
+                class="dot"
+                [class.active]="slideActual() === i"
+                (click)="irASlide(i)"
+                [attr.aria-label]="producto.nombre"
+              ></button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="brands-section">
+    <div class="page-block brands-header">
+      <span class="section-label">Marcas</span>
+      <h2>Las mejores marcas del mercado</h2>
+      <div class="brands-row">
+        <div class="brand-item brand-apple">
+          <span class="brand-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          </span>
+          <span class="brand-name">Apple</span>
+        </div>
+        <div class="brand-item brand-samsung">
+          <span class="brand-logo brand-wordmark" aria-hidden="true">SAMSUNG</span>
+          <span class="brand-name">Samsung</span>
+        </div>
+        <div class="brand-item brand-asus">
+          <span class="brand-logo brand-wordmark italic" aria-hidden="true">ASUS</span>
+          <span class="brand-name">ASUS</span>
+        </div>
+        <div class="brand-item brand-lenovo">
+          <span class="brand-logo brand-wordmark" aria-hidden="true">Lenovo</span>
+          <span class="brand-name">Lenovo</span>
+        </div>
+        <div class="brand-item brand-msi">
+          <span class="brand-logo brand-wordmark msi" aria-hidden="true">MSI</span>
+          <span class="brand-name">MSI</span>
+        </div>
+        <div class="brand-item brand-logitech">
+          <span class="brand-logo brand-wordmark" aria-hidden="true">Logitech</span>
+          <span class="brand-name">Logitech</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="store-footer">
+    <div class="page-block footer-grid">
+      <div class="footer-brand">
+        <a class="footer-logo" routerLink="/">
+          <img src="/images/logo-techstore.jpg" alt="TechStore" width="40" height="40" />
+          <span>TechStore</span>
+        </a>
+        <p>Tu tienda de tecnología online con la mejor experiencia de compra.</p>
+        <div class="social-links">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M22 12a10 10 0 1 0-11.6 9.87v-6.99H8.1V12h2.3V9.8c0-2.27 1.35-3.53 3.42-3.53.99 0 2.03.18 2.03.18v2.24h-1.14c-1.12 0-1.47.7-1.47 1.42V12h2.5l-.4 2.88h-2.1v6.99A10 10 0 0 0 22 12Z"/></svg>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-btn">
+            <img src="/images/instagram.avif" alt="" />
+          </a>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="social-btn">
+            <img src="/images/youtube.png" alt="" />
+          </a>
+          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-btn">
+            <img src="/images/tiktok.webp" alt="" />
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3>Enlaces</h3>
+        <ul>
+          <li><a routerLink="/">Inicio</a></li>
+          <li><a routerLink="/catalogo">Catálogo</a></li>
+          <li><a routerLink="/catalogo">Catálogo</a></li>
+          <li><a href="mailto:contacto@techstore.com">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Ayuda</h3>
+        <ul>
+          <li><a routerLink="/catalogo">Preguntas frecuentes</a></li>
+          <li><a routerLink="/catalogo">Envíos y entregas</a></li>
+          <li><a routerLink="/catalogo">Devoluciones</a></li>
+          <li><a routerLink="/registro">Términos y condiciones</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Mi cuenta</h3>
+        <ul>
+          @if (auth.isLoggedIn() && !auth.isAdmin()) {
+            <li><a routerLink="/cliente/pedidos">Mis pedidos</a></li>
+            <li><a routerLink="/cliente/pagos">Mis pagos</a></li>
+            <li><a routerLink="/cliente/pedidos">Mi perfil</a></li>
+            <li><button type="button" class="footer-link-btn" (click)="auth.logout()">Cerrar sesión</button></li>
+          } @else if (auth.isLoggedIn() && auth.isAdmin()) {
+            <li><a routerLink="/admin">Administración</a></li>
+            <li><button type="button" class="footer-link-btn" (click)="auth.logout()">Cerrar sesión</button></li>
+          } @else {
+            <li><a routerLink="/login">Iniciar sesión</a></li>
+            <li><a routerLink="/registro">Crear cuenta</a></li>
+          }
+        </ul>
+      </div>
+      <div class="footer-col footer-payments">
+        <h3>Métodos de pago</h3>
+        <div class="payment-logos">
+          <img src="/images/tarjetas.png" alt="Tarjetas Visa y Mastercard" class="pay-card" />
+          <img src="/images/yape.png" alt="Yape" class="pay-yape" />
+          <img src="/images/plin.png" alt="Plin" class="pay-plin" />
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

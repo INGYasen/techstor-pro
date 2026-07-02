@@ -1,0 +1,332 @@
+<section class="cliente-page checkout-page">
+  <header class="checkout-header">
+    <div class="checkout-header-text">
+      <span class="checkout-eyebrow">Checkout</span>
+      <h1>Finalizar compra</h1>
+      <p>Completa envío, pago y confirma tu pedido</p>
+    </div>
+    <a routerLink="/carrito" class="btn-back">← Volver al carrito</a>
+  </header>
+
+  <nav class="checkout-stepper" aria-label="Pasos del checkout">
+    @for (s of checkoutSteps; track s.n) {
+      <div class="step-item" [class]="pasoEstado(s.n)">
+        <span class="step-circle">{{ pasoEstado(s.n) === 'done' ? '✓' : s.n }}</span>
+        <span class="step-label">{{ s.label }}</span>
+      </div>
+      @if (s.n < 3) {
+        <div class="step-line" [class.done]="pasoEstado(s.n) === 'done'"></div>
+      }
+    }
+  </nav>
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  @if (step() === 1) {
+    <div class="shipping-layout">
+      <form class="shipping-card" [formGroup]="envioForm" (ngSubmit)="continuarAPago()">
+        <div class="card-head">
+          <div class="card-head-icon" aria-hidden="true">
+            <img src="/images/direccion.webp" alt="" width="40" height="40" />
+          </div>
+          <div>
+            <h3>Dirección de entrega</h3>
+            <p class="panel-hint">Indica dónde entregaremos tu pedido o usa tu ubicación actual.</p>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="address-field">
+            <label for="direccion">Dirección de envío <span class="req">*</span></label>
+            <div class="address-wrap">
+              <span class="input-prefix" aria-hidden="true">⌖</span>
+              <input
+                id="direccion"
+                formControlName="direccionEnvio"
+                placeholder="Ej: Av. Larco 123, Miraflores, Lima"
+                autocomplete="street-address"
+                (blur)="onDireccionBlur()"
+              />
+              @if (mostrarSugerencias()) {
+                <div class="dropdown">
+                  @if (buscandoDireccion()) {
+                    <div class="item muted">Buscando direcciones...</div>
+                  } @else {
+                    @for (s of sugerencias(); track s.place_id) {
+                      <button type="button" class="item" (mousedown)="seleccionarDireccion(s)">{{ s.display_name }}</button>
+                    }
+                  }
+                </div>
+              }
+            </div>
+            <button type="button" class="btn-geo" (click)="usarUbicacion()" [disabled]="ubicando()">
+              <span class="geo-icon" aria-hidden="true">◎</span>
+              {{ ubicando() ? 'Obteniendo ubicación...' : 'Usar mi ubicación actual' }}
+            </button>
+            @if (latitud() != null && longitud() != null) {
+              <div class="location-confirmed">
+                <span aria-hidden="true">✓</span> Ubicación GPS confirmada en el mapa
+              </div>
+            }
+          </div>
+
+          <div class="reference-field">
+            <label for="referencia">Referencia para el repartidor</label>
+            <textarea
+              id="referencia"
+              formControlName="observacion"
+              rows="3"
+              placeholder="Ej: Casa blanca con portón negro, timbre 302, dejar con portería"
+            ></textarea>
+            <span class="field-help">Ayuda al repartidor a encontrarte más rápido.</span>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button type="submit" class="btn-primary btn-continue">
+            Continuar con el pago
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </form>
+
+      <aside class="order-sidebar" aria-label="Resumen del pedido">
+        <h4>Tu pedido</h4>
+        <div class="sidebar-items">
+          @for (item of items(); track item.producto.id) {
+            <div class="sidebar-item">
+              <div class="sidebar-thumb">
+                @if (imagenProducto(item.producto.imagenUrl)) {
+                  <img [src]="imagenProducto(item.producto.imagenUrl)!" [alt]="item.producto.nombre" />
+                } @else {
+                  <span class="thumb-fallback" aria-hidden="true">📦</span>
+                }
+              </div>
+              <div class="sidebar-details">
+                <span class="sidebar-name">{{ item.producto.nombre }}</span>
+                <span class="sidebar-qty">{{ item.cantidad }} {{ item.cantidad === 1 ? 'unidad' : 'unidades' }}</span>
+              </div>
+              <span class="sidebar-price">S/ {{ item.producto.precio * item.cantidad | number: '1.2-2' }}</span>
+            </div>
+          }
+        </div>
+        <div class="sidebar-totals">
+          <div class="sidebar-line"><span>Subtotal</span><span>S/ {{ subtotal() | number: '1.2-2' }}</span></div>
+          <div class="sidebar-line"><span>Envío</span><span>{{ envio() === 0 ? 'Gratis' : ('S/ ' + (envio() | number: '1.2-2')) }}</span></div>
+          <div class="sidebar-total"><span>Total</span><strong>S/ {{ total() | number: '1.2-2' }}</strong></div>
+        </div>
+        <p class="sidebar-note">Precios con IGV incluido</p>
+        <div class="trust-badges">
+          <span>🚚 Envío a todo el Perú</span>
+          <span>🔒 Compra segura</span>
+        </div>
+      </aside>
+    </div>
+  }
+
+  @if (step() === 2) {
+    <form class="payment-checkout" [formGroup]="pagoForm" (ngSubmit)="continuarAResumen()">
+      <section class="checkout-card">
+        <h3>Elige tu método de pago</h3>
+        <p class="panel-hint">Solo registras el método y tus datos. El cobro se hace al confirmar el pedido en el último paso.</p>
+        <div class="pay-methods-list">
+          @for (m of metodosPago; track m.id) {
+            <label class="pay-method-row" [class.selected]="metodoActivo() === m.id">
+              <input type="radio" formControlName="metodo" [value]="m.id" />
+              <span class="pay-icon" [class]="iconoMetodoClase(m.id)">
+                @if (iconoMetodoImagen(m.id); as src) {
+                  <img [src]="src" [alt]="m.label" />
+                } @else {
+                  <span class="pay-icon-fallback">{{ iconoMetodoTexto(m.id) }}</span>
+                }
+              </span>
+              <span class="pay-label">{{ m.label }}</span>
+            </label>
+          }
+        </div>
+      </section>
+
+      <section class="checkout-card payment-panel">
+        @if (metodoActivo() === 'TARJETA') {
+          <div class="method-title">
+            <img src="/images/pago-tarjeta.png" alt="Tarjeta" class="method-title-icon" />
+            <h4>Datos de la tarjeta</h4>
+          </div>
+          <label>
+            Número de tarjeta <span class="req">*</span>
+            <input formControlName="numeroTarjeta" placeholder="1234 1234 1234 1234" maxlength="19" inputmode="numeric" (input)="onTarjetaNumeroInput($event)" />
+          </label>
+          <label>
+            Nombre del titular <span class="req">*</span>
+            <input formControlName="titularTarjeta" placeholder="Ej.: María López" />
+          </label>
+          <div class="row-2">
+            <label>
+              Vencimiento <span class="req">*</span>
+              <input formControlName="vencimiento" placeholder="MM/AA" maxlength="5" inputmode="numeric" (input)="onVencimientoInput($event)" />
+            </label>
+            <label>
+              CVV <span class="req">*</span>
+              <input formControlName="cvv" placeholder="123" maxlength="4" inputmode="numeric" />
+            </label>
+          </div>
+          <p class="secure-note">
+            @if (mpConfig()?.enabled) {
+              🔒 Pago real con tarjeta vía Mercado Pago. En prueba usa: 5031 4332 1540 6351, titular <strong>APRO</strong>, venc. 11/30, CVV 123.
+            } @else {
+              🔒 Simulación — configura Mercado Pago para cobro real con tarjeta.
+            }
+          </p>
+        }
+
+        @if (metodoActivo() === 'YAPE') {
+          <div class="method-title">
+            <img src="/images/pago-yape.png" alt="Yape" class="method-title-icon" />
+            <h4>Datos de Yape</h4>
+          </div>
+          <label>
+            Celular asociado a Yape <span class="req">*</span>
+            <input formControlName="yapeCelular" placeholder="Ej: 987 123 456" inputmode="tel" />
+          </label>
+          <div class="code-field">
+            <span class="field-label">Código de aprobación <span class="req">*</span></span>
+            <div class="code-boxes" role="group" aria-label="Código de aprobación Yape">
+              @for (i of yapeSlots; track i) {
+                <input
+                  type="text"
+                  maxlength="1"
+                  inputmode="numeric"
+                  class="code-digit"
+                  [value]="codigoDigitoEn('yape', i)"
+                  (input)="onCodigoDigito('yape', i, $event)"
+                  (keydown)="onCodigoKeydown('yape', i, $event)"
+                />
+              }
+            </div>
+          </div>
+          <div class="info-box">
+            @if (mpConfig()?.enabled) {
+              <strong>Pago real con Yape</strong> vía Mercado Pago.
+              <ol class="yape-steps">
+                <li>En Yape: activa <em>Compras por internet</em> y define tu límite (≥ total del pedido).</li>
+                <li>Genera el código OTP de 6 dígitos (expira en segundos).</li>
+                <li>Ingresa tu celular de 9 dígitos y el OTP aquí; confirma de inmediato.</li>
+                <li>El pedido debe ser de al menos <strong>S/ 2</strong>.</li>
+              </ol>
+              Tras el pago verás <em>Mercado Pago #ID</em> en la confirmación; búscalo en tu panel de Mercado Pago.
+            } @else {
+              Configura credenciales Mercado Pago TEST en el backend para habilitar cobro real (ver Guia.txt).
+            }
+          </div>
+        }
+
+        @if (metodoActivo() === 'PLIN') {
+          <div class="method-title">
+            <img src="/images/pago-plin.png" alt="Plin" class="method-title-icon" />
+            <h4>Datos de Plin</h4>
+          </div>
+          <label>
+            Celular asociado a Plin <span class="req">*</span>
+            <input formControlName="plinCelular" placeholder="Ej: 987 123 456" inputmode="tel" />
+          </label>
+          <div class="code-field">
+            <span class="field-label">Código de aprobación <span class="req">*</span></span>
+            <div class="code-boxes" role="group" aria-label="Código de aprobación Plin">
+              @for (i of plinSlots; track i) {
+                <input
+                  type="text"
+                  maxlength="1"
+                  inputmode="numeric"
+                  class="code-digit"
+                  [value]="codigoDigitoEn('plin', i)"
+                  (input)="onCodigoDigito('plin', i, $event)"
+                  (keydown)="onCodigoKeydown('plin', i, $event)"
+                />
+              }
+            </div>
+          </div>
+        }
+
+        @if (metodoActivo() === 'TRANSFERENCIA') {
+          <h4>Transferencia bancaria</h4>
+          <div class="bank-info">
+            <p><strong>BCP:</strong> 191-12345678-0-12 — TechStore SAC</p>
+            <p><strong>CCI:</strong> 002-191-001234567812-34</p>
+          </div>
+          <label>
+            Nº de operación <span class="req">*</span>
+            <input formControlName="transferenciaRef" placeholder="Ej: OP-123456789" />
+          </label>
+        }
+
+        @if (metodoActivo() === 'CONTRA_ENTREGA') {
+          <div class="info-box">
+            Pagarás en efectivo al recibir tu pedido. Ten listo el monto: <strong>S/ {{ total() | number: '1.2-2' }}</strong>.
+          </div>
+        }
+      </section>
+
+      <label class="privacy-check">
+        <input type="checkbox" formControlName="aceptaPolitica" />
+        <span>Acepto el tratamiento de mis datos según la política de privacidad.</span>
+      </label>
+
+      <div class="actions">
+        <button type="button" class="btn outline" (click)="step.set(1)">← Atrás</button>
+        <button type="submit" class="btn primary">Continuar</button>
+      </div>
+    </form>
+  }
+
+  @if (step() === 3) {
+    <div class="panel summary">
+      <h3>Resumen de tu compra</h3>
+
+      <div class="summary-block">
+        <h4>Productos</h4>
+        @for (item of items(); track item.producto.id) {
+          <div class="summary-line">
+            <span>{{ item.producto.nombre }} × {{ item.cantidad }}</span>
+            <span>S/ {{ item.producto.precio * item.cantidad | number: '1.2-2' }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="summary-block totals">
+        <div class="summary-line"><span>Subtotal productos</span><span>S/ {{ subtotal() | number: '1.2-2' }}</span></div>
+        <div class="summary-line"><span>Envío</span><span>{{ envio() === 0 ? 'Gratis' : ('S/ ' + (envio() | number: '1.2-2')) }}</span></div>
+        <div class="summary-line total"><span>Total a pagar</span><strong>S/ {{ total() | number: '1.2-2' }}</strong></div>
+        <p class="igv-note">Precios con IGV incluido · Base S/ {{ baseImponible() | number: '1.2-2' }} + IGV S/ {{ impuestos() | number: '1.2-2' }}</p>
+      </div>
+
+      <div class="summary-block">
+        <h4>📍 Envío</h4>
+        <p>{{ envioForm.controls.direccionEnvio.value }}</p>
+        @if (latitud() != null) {
+          <small class="coords-ok">Ubicación GPS confirmada</small>
+        }
+      </div>
+
+      <div class="summary-block">
+        <h4>Pago</h4>
+        <div class="summary-pay-row">
+          @if (iconoMetodoImagen(metodoActivo()); as src) {
+            <img [src]="src" alt="" class="summary-pay-icon" />
+          } @else {
+            <span class="summary-pay-fallback">{{ iconoMetodoTexto(metodoActivo()) }}</span>
+          }
+          <p>{{ metodoLabel() }}</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn outline" (click)="step.set(2)">← Atrás</button>
+        <button type="button" class="btn primary place-order" (click)="confirmarCompra()" [disabled]="processing()">
+          {{ processing() ? 'Procesando pago...' : 'Confirmar compra' }}
+        </button>
+      </div>
+    </div>
+  }
+</section>

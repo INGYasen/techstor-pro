@@ -1,0 +1,19 @@
+@import '../pedidos/admin-pedidos.component.scss';
+
+.form-hint {
+  margin: -0.25rem 0 0.75rem;
+  font-size: 0.8rem;
+  color: rgba(148, 163, 184, 0.85);
+}
+
+.estado-badge {
+  &.estado-aprobado {
+    background: rgba(34, 197, 94, 0.15);
+    color: #86efac;
+  }
+
+  &.estado-rechazado {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+  }
+}

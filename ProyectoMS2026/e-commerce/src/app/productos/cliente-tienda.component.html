@@ -1,0 +1,31 @@
+<section class="panel">
+  <div class="panel-header">
+    <h2>Catálogo de productos</h2>
+  </div>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+
+  @if (loading()) {
+    <p>Cargando productos...</p>
+  } @else if (!productos().length) {
+    <p class="muted">No hay productos disponibles en este momento.</p>
+  } @else {
+    <div class="product-grid">
+      @for (p of productos(); track p.id) {
+        <article class="product-card">
+          <h3>{{ p.nombre }}</h3>
+          @if (p.descripcion) {
+            <p>{{ p.descripcion }}</p>
+          }
+          <div class="meta">
+            <span class="price">{{ p.precio | currency: 'PEN' : 'symbol' : '1.2-2' }}</span>
+            <span class="stock">Stock: {{ p.stock }}</span>
+          </div>
+          <button type="button" class="btn primary" (click)="agregar(p)">Agregar al carrito</button>
+        </article>
+      }
+    </div>
+  }
+</section>

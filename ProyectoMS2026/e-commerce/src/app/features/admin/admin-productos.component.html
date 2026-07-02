@@ -1,0 +1,156 @@
+<section class="panel">
+  <div class="panel-header">
+    <h2>Productos</h2>
+    <button type="button" class="btn outline" (click)="cargar()">Actualizar</button>
+  </div>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  <div class="grid-2">
+    <form class="form-card" [formGroup]="form" (ngSubmit)="guardar()">
+      <h3>{{ editingId() ? 'Editar producto' : 'Nuevo producto' }}</h3>
+
+      <div class="image-field">
+        <span class="field-label">Foto del producto</span>
+        <div class="image-upload">
+          @if (previewUrl()) {
+            <img [src]="previewUrl()!" alt="Vista previa del producto" class="image-preview" />
+          } @else {
+            <div class="image-placeholder">Sin imagen seleccionada</div>
+          }
+
+          <div class="image-actions">
+            <label class="btn outline file-picker">
+              {{ uploadingImage() ? 'Subiendo...' : 'Seleccionar foto' }}
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                (change)="onImagenSeleccionada($event)"
+                [disabled]="uploadingImage()"
+              />
+            </label>
+            @if (previewUrl()) {
+              <button type="button" class="btn outline" (click)="quitarImagen()">Quitar foto</button>
+            }
+          </div>
+
+          @if (selectedFileName()) {
+            <small class="file-name">{{ selectedFileName() }}</small>
+          }
+          <small class="help-text">Formatos: JPG, PNG, WEBP o GIF. Máximo 5 MB.</small>
+        </div>
+      </div>
+
+      <label>
+        Nombre
+        <input formControlName="nombre" />
+      </label>
+      <label>
+        Descripción
+        <input formControlName="descripcion" />
+      </label>
+      <label>
+        Categoría
+        <select formControlName="idCategoria">
+          @for (cat of categorias(); track cat.id) {
+            <option [ngValue]="cat.id">{{ cat.nombre }}</option>
+          }
+        </select>
+      </label>
+      <div class="row">
+        <label>
+          Precio
+          <input type="number" step="0.01" formControlName="precio" />
+        </label>
+        <label>
+          Stock
+          <input type="number" formControlName="stock" />
+        </label>
+      </div>
+      <label>
+        SKU
+        <input formControlName="sku" />
+      </label>
+      <label class="checkbox">
+        <input type="checkbox" formControlName="activo" />
+        Activo
+      </label>
+
+      <div class="promo-block">
+        <h4>Oferta</h4>
+        <p class="promo-hint">Marca el producto como oferta. Se usará en inicio y destacados; no aparece como sección aparte en el catálogo.</p>
+        <label class="checkbox">
+          <input type="checkbox" formControlName="enOferta" />
+          Producto en oferta
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary" [disabled]="saving() || uploadingImage() || !categorias().length">
+          {{ saving() ? 'Guardando...' : editingId() ? 'Actualizar' : 'Crear producto' }}
+        </button>
+        @if (editingId()) {
+          <button type="button" class="btn outline" (click)="cancelarEdicion()">Cancelar</button>
+        }
+      </div>
+    </form>
+
+    <div class="table-card">
+      <h3>Listado ({{ productos().length }})</h3>
+      @if (loading()) {
+        <p>Cargando...</p>
+      } @else if (!productos().length) {
+        <p class="muted">No hay productos. Crea categorías y productos primero.</p>
+      } @else {
+        <table>
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of productos(); track p.id) {
+              <tr>
+                <td>
+                  @if (imagenProducto(p)) {
+                    <img [src]="imagenProducto(p)!" alt="" class="table-thumb" />
+                  } @else {
+                    <span class="table-thumb placeholder">📷</span>
+                  }
+                </td>
+                <td>
+                  <strong>{{ p.nombre }}</strong>
+                  @if (p.sku) {
+                    <small>{{ p.sku }}</small>
+                  }
+                  @if (p.enOferta) {
+                    <span class="tag-oferta">Oferta</span>
+                  }
+                </td>
+                <td>{{ nombreCategoria(p.idCategoria) }}</td>
+                <td>{{ p.precio | currency: 'PEN' : 'symbol' : '1.2-2' }}</td>
+                <td>{{ p.stock }}</td>
+                <td>{{ p.activo !== false ? 'Activo' : 'Inactivo' }}</td>
+                <td class="row-actions">
+                  <button type="button" class="btn outline sm" (click)="editar(p)">Editar</button>
+                  <button type="button" class="btn danger sm" (click)="eliminar(p)">Eliminar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</section>

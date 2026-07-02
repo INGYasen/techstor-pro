@@ -1,0 +1,66 @@
+<section class="detail-page">
+  @if (loading()) {
+    <p class="loading">Cargando producto...</p>
+  } @else if (error()) {
+    <div class="alert error">{{ error() }}</div>
+    <a routerLink="/catalogo" class="btn outline">Volver al catálogo</a>
+  } @else if (producto(); as p) {
+    <a routerLink="/catalogo" class="back-link">← Volver al catálogo</a>
+
+    <div class="detail-layout">
+      <div class="gallery">
+        <div class="main-image">
+          <img [src]="imagenes()[imagenActiva()]" [alt]="p.nombre" />
+        </div>
+        <div class="thumbs">
+          @for (img of imagenes(); track img; let i = $index) {
+            <button type="button" [class.active]="imagenActiva() === i" (click)="seleccionarImagen(i)">
+              <img [src]="img" [alt]="p.nombre + ' vista ' + (i + 1)" />
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="detail-info">
+        <div class="badges">
+          @if (oferta()) { <span class="badge offer">Oferta</span> }
+          @else if (destacado()) { <span class="badge featured">Destacado</span> }
+        </div>
+        <h1>{{ p.nombre }}</h1>
+        <p class="meta">
+          <span>{{ marca() }}</span>
+          <span>·</span>
+          <span>{{ p.categoria?.nombre ?? 'General' }}</span>
+          <span>·</span>
+          <span class="rating">★ {{ rating() }}</span>
+        </p>
+        <p class="description">{{ p.descripcion || 'Producto tecnológico de calidad disponible en TechStore.' }}</p>
+        <div class="price-block">
+          <div class="price-row">
+            <strong>S/ {{ p.precio | number: '1.2-2' }}</strong>
+            @if (oferta()) {
+              <span class="price-old">S/ {{ precioAnterior(p) | number: '1.2-2' }}</span>
+              <span class="price-discount">-{{ descuentoPorcentaje(p) }}%</span>
+            }
+          </div>
+          <span class="stock" [class.low]="p.stock <= 3">{{ p.stock }} en stock</span>
+        </div>
+
+        @if (auth.canUseCart()) {
+          <div class="qty-row">
+            <span>Cantidad</span>
+            <div class="qty-controls">
+              <button type="button" (click)="cambiarCantidad(-1)" [disabled]="cantidad() <= 1">−</button>
+              <input type="number" [ngModel]="cantidad()" (ngModelChange)="cantidad.set(+$event)" min="1" [max]="p.stock" />
+              <button type="button" (click)="cambiarCantidad(1)" [disabled]="cantidad() >= p.stock">+</button>
+            </div>
+          </div>
+
+          <button type="button" class="btn primary add-btn" (click)="agregarAlCarrito()" [disabled]="p.stock <= 0">
+            Agregar al carrito
+          </button>
+        }
+      </div>
+    </div>
+  }
+</section>

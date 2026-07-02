@@ -1,0 +1,25 @@
+# Variables sensibles y artefactos locales (raíz del monorepo)
+.env
+.env.*
+!.env.example
+**/.env
+!**/.env.example
+
+# Dependencias y builds
+**/node_modules/
+**/dist/
+**/target/
+**/.angular/cache/
+
+# Logs
+**/logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Sistema
+.DS_Store
+Thumbs.db

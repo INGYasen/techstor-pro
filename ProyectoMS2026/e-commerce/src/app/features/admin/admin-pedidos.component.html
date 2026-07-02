@@ -1,0 +1,208 @@
+<section class="admin-page">
+  <header class="page-header">
+    <div class="page-header-text">
+      <h2>Pedidos de clientes</h2>
+      <p class="page-sub">Consulta y gestiona los pedidos realizados desde la tienda.</p>
+    </div>
+    <button type="button" class="btn-refresh" (click)="cargar()" [disabled]="loading()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.1A6 6 0 1 1 12 6c1.66 0 3.14.67 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+      Actualizar
+    </button>
+  </header>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  <div class="stats-row">
+    <article class="stat-card stat-total">
+      <div class="stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-label">Total pedidos</span>
+        <strong>{{ pedidos().length }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-warn">
+      <div class="stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-label">Pendientes</span>
+        <strong>{{ contarPorEstado('PENDIENTE') }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-ok">
+      <div class="stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-label">Pagados</span>
+        <strong>{{ contarPorEstado('PAGADO') }}</strong>
+      </div>
+    </article>
+    <article class="stat-card stat-info">
+      <div class="stat-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-label">Enviados</span>
+        <strong>{{ contarPorEstado('ENVIADO') }}</strong>
+      </div>
+    </article>
+  </div>
+
+  <div class="table-panel">
+    <div class="table-toolbar">
+      <div class="toolbar-title">
+        <h3>Pedidos registrados</h3>
+        <span class="count-badge">{{ pedidosVisibles().length }}</span>
+      </div>
+      <div class="table-filters">
+        <label class="search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input
+            placeholder="Buscar por #, cliente o dirección"
+            [value]="busqueda()"
+            (input)="busqueda.set($any($event.target).value)"
+          />
+        </label>
+        <select class="filter-select" [value]="filtroEstado()" (change)="filtroEstado.set($any($event.target).value)">
+          <option value="TODOS">Todos los estados</option>
+          @for (e of estados; track e) {
+            <option [value]="e">{{ e }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="state-box">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Cargando pedidos...</p>
+      </div>
+    } @else if (!pedidos().length) {
+      <div class="state-box">
+        <p>Aún no hay pedidos de clientes.</p>
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="col-id">Pedido</th>
+              <th class="col-cliente">Cliente</th>
+              <th class="col-estado">Estado</th>
+              <th class="col-total">Total</th>
+              <th class="col-fecha">Fecha</th>
+              <th class="col-pago">Pago</th>
+              <th class="col-actions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pedido of pedidosVisibles(); track pedido.id) {
+              <tr>
+                <td class="col-id"><span class="id-tag">#{{ pedido.id }}</span></td>
+                <td class="col-cliente">
+                  <span class="cliente-nombre">{{ pedido.cliente }}</span>
+                  <span class="cliente-meta">Usuario {{ pedido.userId }}</span>
+                </td>
+                <td class="col-estado">
+                  <span class="estado-badge" [class]="'estado-' + pedido.estado.toLowerCase()">
+                    {{ pedido.estado }}
+                  </span>
+                </td>
+                <td class="col-total money">S/ {{ pedido.total | number: '1.2-2' }}</td>
+                <td class="col-fecha">{{ pedido.createdAt | date: 'dd/MM/yy, h:mm a' }}</td>
+                <td class="col-pago">
+                  @if (metodoPago(pedido.id) !== '—') {
+                    <span class="metodo-pill">{{ metodoPago(pedido.id) }}</span>
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
+                </td>
+                <td class="col-actions">
+                  <div class="action-group">
+                    <button type="button" class="btn-action primary" (click)="abrirDetalle(pedido)">
+                      Gestionar
+                    </button>
+                    <button type="button" class="btn-action secondary" (click)="imprimir(pedido)" title="Imprimir comprobante">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8H5a3 3 0 0 0-3 3v6h4v4h12v-4h4v-6a3 3 0 0 0-3-3zm-3 11H8v-5h8v5zm3-7a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-1-9H6v4h12V3z"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+@if (pedidoSeleccionado(); as pedido) {
+  <div class="modal-backdrop" (click)="cerrarDetalle()"></div>
+  <div class="modal" role="dialog" aria-labelledby="pedido-modal-title">
+    <header class="modal-header">
+      <div>
+        <h3 id="pedido-modal-title">Pedido #{{ pedido.id }}</h3>
+        <p class="modal-sub">{{ pedido.cliente }} · {{ pedido.createdAt | date: 'medium' }}</p>
+      </div>
+      <button type="button" class="modal-close" (click)="cerrarDetalle()" aria-label="Cerrar">×</button>
+    </header>
+
+    <div class="detail-grid">
+      <div>
+        <span class="detail-label">Dirección</span>
+        <p>{{ pedido.direccionEnvio || '—' }}</p>
+      </div>
+      <div>
+        <span class="detail-label">Método de pago</span>
+        <p>{{ metodoPago(pedido.id) }}</p>
+      </div>
+      <div>
+        <span class="detail-label">Total</span>
+        <p class="detail-total">S/ {{ pedido.total | number: '1.2-2' }}</p>
+      </div>
+    </div>
+
+    <div class="detail-items">
+      <h4>Productos</h4>
+      <ul>
+        @for (item of pedido.items; track $index) {
+          <li>
+            <span>{{ item.nombreProducto ?? nombreProducto(item.productoId) }}</span>
+            <span>x{{ item.cantidad }}</span>
+            <span>S/ {{ item.subtotal ?? (item.precioUnitario ?? item.precio ?? 0) * item.cantidad | number: '1.2-2' }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <form class="modal-form" [formGroup]="estadoForm" (ngSubmit)="guardarEstado()">
+      <label>
+        Cambiar estado
+        <select formControlName="estado">
+          @for (estado of estados; track estado) {
+            <option [value]="estado">{{ estado }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Observación interna
+        <input formControlName="observacion" placeholder="Notas para el equipo" />
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn-action secondary wide" (click)="cerrarDetalle()">Cerrar</button>
+        <button type="button" class="btn-action secondary wide" (click)="imprimir(pedido)">Imprimir</button>
+        <button type="submit" class="btn-action primary wide" [disabled]="saving()">
+          {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </form>
+  </div>
+}

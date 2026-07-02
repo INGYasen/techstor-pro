@@ -1,0 +1,33 @@
+<div class="store-shell">
+  <header class="store-nav">
+    <div class="store-nav-inner">
+      <a class="brand" routerLink="/">
+        <img class="brand-icon" src="/images/logo-proyecto.png" alt="" width="88" height="88" />
+        <span>TechStore</span>
+      </a>
+
+      <nav class="store-menu">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+        <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+        <a routerLink="/cliente/carrito" routerLinkActive="active">Carrito</a>
+        <a routerLink="/cliente/pedidos" routerLinkActive="active">Mis pedidos</a>
+        <a routerLink="/cliente/pagos" routerLinkActive="active">Mis pagos</a>
+      </nav>
+
+      <div class="store-actions">
+        <a class="icon-link" routerLink="/cliente/carrito" aria-label="Carrito">
+          🛒
+          @if (cart.itemCount() > 0) {
+            <span class="cart-badge">{{ cart.itemCount() }}</span>
+          }
+        </a>
+        <span class="user-link">{{ auth.getUsername() }}</span>
+        <button type="button" class="btn-nav ghost" (click)="auth.logout()">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="cliente-content">
+    <router-outlet />
+  </main>
+</div>

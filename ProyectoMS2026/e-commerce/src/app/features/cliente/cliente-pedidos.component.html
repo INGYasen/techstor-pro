@@ -1,0 +1,213 @@
+<section class="cliente-page cliente-pedidos-page">
+  <header class="page-hero">
+    <div>
+      <h1>Mis pedidos</h1>
+      <p>{{ pedidos().length }} pedido{{ pedidos().length === 1 ? '' : 's' }} registrado{{ pedidos().length === 1 ? '' : 's' }}</p>
+    </div>
+    <div class="page-actions">
+      <label class="filter-control">
+        <span>Filtrar por estado:</span>
+        <select [ngModel]="filtroEstado()" (ngModelChange)="onFiltroChange($event)">
+          @for (estado of estadosFiltro; track estado) {
+            <option [value]="estado">{{ etiquetaEstado(estado) }}</option>
+          }
+        </select>
+      </label>
+      <button type="button" class="btn primary refresh-btn" (click)="cargar()">
+        <span aria-hidden="true">↻</span> Actualizar
+      </button>
+    </div>
+  </header>
+
+  @if (success()) {
+    <div class="alert success">{{ success() }}</div>
+  }
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-state">Cargando pedidos...</div>
+  } @else if (!pedidos().length) {
+    <div class="empty-box">
+      <div class="empty-icon">📦</div>
+      <h3>Aún no tienes pedidos</h3>
+      <p>Cuando compres desde el catálogo, tus pedidos aparecerán aquí con el detalle y estado de envío.</p>
+      <a routerLink="/catalogo" class="btn primary">Ir al catálogo</a>
+    </div>
+  } @else if (!pedidosVisibles().length) {
+    <div class="empty-box">
+      <div class="empty-icon">🔍</div>
+      <h3>Sin resultados</h3>
+      <p>No hay pedidos con el estado seleccionado.</p>
+      <button type="button" class="btn outline" (click)="onFiltroChange('TODOS')">Ver todos</button>
+    </div>
+  } @else {
+    <div class="orders-table-wrap">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Dirección de envío</th>
+            <th>Productos</th>
+            <th>Estado</th>
+            <th>Pago</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pedido of pedidosPaginados(); track pedido.id) {
+            @let pago = pagoDePedido(pedido.id);
+            <tr>
+              <td class="col-id">
+                <button type="button" class="order-link" (click)="verDetalle(pedido)">{{ pedido.id }}</button>
+              </td>
+              <td class="col-date">{{ pedido.createdAt | date: 'd MMM y, h:mm a' }}</td>
+              <td class="col-address" [title]="pedido.direccionEnvio || ''">{{ pedido.direccionEnvio || '—' }}</td>
+              <td class="col-products">
+                <div class="order-products">
+                  @for (item of pedido.items; track item.id ?? item.productoId) {
+                    <div class="product-chip">
+                      <div class="product-thumb">
+                        @if (imagenItem(item); as src) {
+                          <img [src]="src" [alt]="itemLabel(item)" loading="lazy" />
+                        } @else {
+                          <span class="thumb-fallback" aria-hidden="true">📦</span>
+                        }
+                      </div>
+                      <div class="product-chip-body">
+                        <span class="product-chip-name">{{ itemLabel(item) }}</span>
+                        <span class="product-chip-meta">
+                          {{ item.cantidad }} {{ item.cantidad === 1 ? 'unidad' : 'unidades' }}
+                          · S/ {{ itemPrecio(item) | number: '1.2-2' }}
+                        </span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </td>
+              <td>
+                <span class="estado-badge" [class]="claseEstado(estadoMostrar(pedido, pago))">
+                  {{ etiquetaEstado(estadoMostrar(pedido, pago)) }}
+                </span>
+              </td>
+              <td>
+                <div class="pago-badges">
+                  @if (mostrarPagoAprobado(pedido, pago)) {
+                    <span class="badge-pago pago-aprobado">Aprobado</span>
+                  }
+                  @if (mostrarNoAplicado(pedido, pago)) {
+                    <span class="badge-pago pago-no-aplicado">NO APLICADO</span>
+                  } @else if (pago && pago.estado !== 'APROBADO') {
+                    <span class="badge-pago" [class]="'pago-' + pago.estado.toLowerCase()">{{ pago.estado }}</span>
+                  }
+                  @if (pago && pedido.estado !== 'CANCELADO') {
+                    <span class="badge-metodo" [class]="claseMetodoPago(pago.metodo)">{{ pago.metodo }}</span>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="table-footer">
+      <span>
+        Mostrando {{ rangoPaginacion().desde }} a {{ rangoPaginacion().hasta }} de {{ totalFiltrados() }} pedidos
+      </span>
+      <div class="pagination">
+        <button type="button" class="page-btn" [disabled]="paginaActual() === 1" (click)="irPagina(paginaActual() - 1)" aria-label="Anterior">‹</button>
+        @for (pagina of paginasLista(); track pagina) {
+          <button
+            type="button"
+            class="page-btn"
+            [class.active]="pagina === paginaActual()"
+            (click)="irPagina(pagina)"
+          >
+            {{ pagina }}
+          </button>
+        }
+        <button
+          type="button"
+          class="page-btn"
+          [disabled]="paginaActual() === totalPaginas()"
+          (click)="irPagina(paginaActual() + 1)"
+          aria-label="Siguiente"
+        >›</button>
+      </div>
+    </footer>
+  }
+</section>
+
+@if (detallePedido(); as pedido) {
+  @let pago = pagoDePedido(pedido.id);
+  <div class="modal-backdrop" (click)="cerrarDetalle()"></div>
+  <div class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detalle-titulo">
+    <header class="detail-header">
+      <div>
+        <h2 id="detalle-titulo">Pedido {{ pedido.id }}</h2>
+        <p>{{ pedido.createdAt | date: 'd MMM y, h:mm a' }}</p>
+      </div>
+      <button type="button" class="close-btn" (click)="cerrarDetalle()" aria-label="Cerrar">×</button>
+    </header>
+
+    <div class="detail-badges">
+      <span class="estado-badge" [class]="claseEstado(estadoMostrar(pedido, pago))">
+        {{ etiquetaEstado(estadoMostrar(pedido, pago)) }}
+      </span>
+      @if (pago) {
+        <span class="badge-pago pago-aprobado" [class.pago-aprobado]="pago.estado === 'APROBADO'">
+          {{ pago.estado === 'APROBADO' ? 'Aprobado' : pago.estado }}
+        </span>
+        <span class="badge-metodo" [class]="claseMetodoPago(pago.metodo)">{{ pago.metodo }}</span>
+      }
+    </div>
+
+    @if (pedido.direccionEnvio) {
+      <div class="detail-block">
+        <h3>Dirección de envío</h3>
+        <p>{{ pedido.direccionEnvio }}</p>
+      </div>
+    }
+
+    @if (observacionVisible(pedido.observacion) || tieneUbicacionGps(pedido.observacion)) {
+      <div class="detail-block">
+        <h3>Observación</h3>
+        <p>{{ observacionVisible(pedido.observacion) }}</p>
+        @if (tieneUbicacionGps(pedido.observacion)) {
+          <small class="gps-ok">✓ Ubicación GPS registrada</small>
+        }
+      </div>
+    }
+
+    <div class="detail-items">
+      <div class="detail-items-head">
+        <span>Producto</span>
+        <span>Cant.</span>
+        <span>Subtotal</span>
+      </div>
+      @for (item of pedido.items; track item.id ?? item.productoId) {
+        <div class="detail-items-row detail-items-row--rich">
+          <div class="detail-product">
+            <div class="product-thumb product-thumb--sm">
+              @if (imagenItem(item); as src) {
+                <img [src]="src" [alt]="itemLabel(item)" />
+              } @else {
+                <span class="thumb-fallback" aria-hidden="true">📦</span>
+              }
+            </div>
+            <span>{{ itemLabel(item) }}</span>
+          </div>
+          <span>{{ item.cantidad }}</span>
+          <span>S/ {{ itemPrecio(item) | number: '1.2-2' }}</span>
+        </div>
+      }
+    </div>
+
+    <footer class="detail-footer">
+      <strong>Total: S/ {{ pedido.total | number: '1.2-2' }}</strong>
+      <button type="button" class="btn primary" (click)="imprimir(pedido)">Imprimir comprobante</button>
+    </footer>
+  </div>
+}

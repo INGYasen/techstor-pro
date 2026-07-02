@@ -1,0 +1,238 @@
+PASOS PARA LEVANTAR EL PROYECTO SI:
+
+============================================================
+ORDEN DE ARRANQUE (PROD / docker compose)
+============================================================
+
+1) INFRAESTRUCTURA (config-server, eureka, gateway)
+   cd infra
+   copy .env.example .env       # (solo la primera vez)
+   docker compose up -d --build
+
+2) OBSERVABILIDAD (prometheus, loki, promtail, grafana)
+   cd ..\observability
+   docker compose up -d --build
+   # Prometheus:  http://localhost:19090
+   # Grafana:     http://localhost:13000  (admin/admin)
+   # Loki:        http://localhost:23100
+
+3) KAFKA (broker, exporter, kafka-ui)
+   cd ..\kafka
+   docker compose -f docker-compose-dev.yml up -d
+   # Kafka:       localhost:41092
+   # Kafka UI:    http://localhost:41085
+
+4) AUTH SERVICE
+   cd ..\services\auth
+   docker compose up -d --build
+
+5) CATALOGO SERVICE
+   cd ..\catalogo
+   docker compose up -d --build
+
+6) PRODUCTO SERVICE
+   cd ..\producto
+   docker compose up -d --build
+
+7) PEDIDO SERVICE
+   cd ..\pedido
+   docker compose up -d --build
+
+8) PAGO SERVICE
+   cd ..\pago
+   docker compose up -d --build
+
+============================================================
+ORDEN DE ARRANQUE (DEV / desde IDE)
+============================================================
+
+Levanta SOLO las dependencias en Docker (-dev):
+   cd observability     && docker compose -f docker-compose-dev.yml up -d
+   cd ..\kafka           && docker compose -f docker-compose-dev.yml up -d
+   cd ..\services\auth     && docker compose -f docker-compose-dev.yml up -d
+   cd ..\catalogo          && docker compose -f docker-compose-dev.yml up -d
+   cd ..\producto          && docker compose -f docker-compose-dev.yml up -d
+   cd ..\pedido            && docker compose -f docker-compose-dev.yml up -d
+   cd ..\pago              && docker compose -f docker-compose-dev.yml up -d
+   cd ..\carrito           && docker compose -f docker-compose-dev.yml up -d
+
+Después, en el IDE / consola corre cada Spring Boot EN ESTE ORDEN
+(con `mvn spring-boot:run` desde la carpeta del servicio):
+   1. infra/config-server      -> http://localhost:7071
+   2. infra/registry-server    -> http://localhost:7081
+   3. infra/gateway            -> http://localhost:7091
+   4. services/auth            -> http://localhost:8041
+   5. services/catalogo        -> http://localhost:8081
+   6. services/producto        -> http://localhost:9091
+   7. services/pedido          -> http://localhost:9101
+   8. services/pago            -> http://localhost:9111
+   9. services/carrito         -> http://localhost:9121
+
+============================================================
+ENDPOINTS CLAVE (DEV)
+============================================================
+
+CONFIG SERVER:
+  http://localhost:7071/producto/dev
+  http://localhost:7071/catalogo/dev
+  http://localhost:7071/gateway/dev
+  http://localhost:7071/auth/dev
+  http://localhost:7071/pedido/dev
+  http://localhost:7071/pago/dev
+  http://localhost:7071/carrito/dev
+
+EUREKA:        http://localhost:7081/        (deben aparecer: AUTH, GATEWAY, CATALOGO, PRODUCTO, PEDIDO, PAGO, CARRITO)
+
+GATEWAY (entrada única):
+  http://localhost:7091/auth/login                (POST público)
+  http://localhost:7091/auth/register             (POST público)
+  http://localhost:7091/api/v1/categorias         (requiere JWT)
+  http://localhost:7091/api/v1/productos          (GET público; POST/PUT/DELETE requieren ROLE_ADMIN)
+  http://localhost:7091/api/v1/pedidos            (requiere JWT — registra pago via Feign al crear)
+  http://localhost:7091/api/v1/pagos              (requiere JWT)
+  http://localhost:7091/api/v1/carritos/me      (requiere JWT — carrito del usuario)
+
+SWAGGER directo:
+  http://localhost:8041/swagger-ui/index.html   (auth)
+  http://localhost:8081/swagger-ui/index.html   (catalogo)
+  http://localhost:9091/swagger-ui/index.html   (producto)
+  http://localhost:9101/swagger-ui/index.html   (pedido)
+  http://localhost:9111/swagger-ui/index.html   (pago)
+  http://localhost:9121/swagger-ui/index.html   (carrito)
+
+ACTUATOR (cada servicio):
+  http://localhost:<port>/actuator/health
+  http://localhost:<port>/actuator/metrics
+  http://localhost:<port>/actuator/prometheus
+
+OBSERVABILIDAD:
+  Prometheus:  http://localhost:19090           (targets: /targets)
+  Grafana:     http://localhost:13000           (admin/admin)
+
+============================================================
+USUARIOS CARGADOS (DataInitializer)
+============================================================
+  admin / admin123   (rol ADMIN)
+  user  / user123    (rol USER)
+
+============================================================
+PRUEBA DEL FLUJO COMPLETO (PowerShell)
+============================================================
+
+# 1. LOGIN (público, vía Gateway)
+$body = @{ username = "admin"; password = "admin123" } | ConvertTo-Json
+$res  = Invoke-RestMethod -Method Post `
+         -Uri "http://localhost:7091/auth/login" `
+         -ContentType "application/json" -Body $body
+$token = $res.accessToken
+$token   # imprime el JWT
+
+# 2. SIN token → 401
+try { Invoke-WebRequest -Uri "http://localhost:7091/api/v1/productos" } catch { $_.Exception.Response.StatusCode }
+
+# 3. CON token válido → 200
+Invoke-RestMethod -Method Get `
+   -Uri "http://localhost:7091/api/v1/productos" `
+   -Headers @{ Authorization = "Bearer $token" }
+
+# 4. POST productos: requiere ROLE_ADMIN
+$nuevo = @{
+  nombre = "Producto JWT"
+  descripcion = "demo"
+  idCategoria = 1
+  precio = 99.90
+  stock = 10
+  activo = $true
+} | ConvertTo-Json
+Invoke-RestMethod -Method Post `
+   -Uri "http://localhost:7091/api/v1/productos" `
+   -Headers @{ Authorization = "Bearer $token" } `
+   -ContentType "application/json" -Body $nuevo
+
+# 5. REGISTER nuevo usuario (rol USER)
+$reg = @{ username = "juan"; password = "123456" } | ConvertTo-Json
+Invoke-RestMethod -Method Post `
+   -Uri "http://localhost:7091/auth/register" `
+   -ContentType "application/json" -Body $reg
+
+# 6. FLUJO PEDIDO -> PAGO (Feign)
+# Crear pedido: pedido llama a pago y registra un pago PENDIENTE.
+$pedido = @{
+  userId = 1
+  cliente = "admin"
+  estado = "PENDIENTE"
+  direccionEnvio = "Lima, Perú"
+  items = @(@{ productoId = 1; cantidad = 1 })
+} | ConvertTo-Json -Depth 5
+Invoke-RestMethod -Method Post `
+   -Uri "http://localhost:7091/api/v1/pedidos" `
+   -Headers @{ Authorization = "Bearer $token" } `
+   -ContentType "application/json" -Body $pedido
+
+# Verificar pago creado
+Invoke-RestMethod -Method Get `
+   -Uri "http://localhost:7091/api/v1/pagos" `
+   -Headers @{ Authorization = "Bearer $token" }
+
+# 7. CIRCUIT BREAKER (producto -> catalogo con Feign)
+Invoke-RestMethod -Method Get `
+   -Uri "http://localhost:7091/api/v1/productos/detalle/1" `
+   -Headers @{ Authorization = "Bearer $token" }
+# La respuesta debe traer categoria o null (fallback) si catalogo está caído.
+
+============================================================
+CARRITO (si no agrega productos)
+============================================================
+1) Debe estar levantado el microservicio carrito (puerto 9121) y su MySQL (3421).
+2) Probar con cuenta cliente: user / user123 (admin NO usa carrito).
+3) Si el carrito falla por esquema antiguo en MySQL:
+   .\scripts\reset-carrito-db.ps1
+   Luego reinicia el microservicio carrito.
+
+============================================================
+QUERIES ÚTILES
+============================================================
+Prometheus (http://localhost:19090):
+  up
+  sum by (job) (rate(http_server_requests_seconds_count[1m]))
+  sum by (job) (jvm_memory_used_bytes)
+  avg by (job) (system_cpu_usage)
+
+Loki (Grafana http://localhost:13000):
+  {service="gateway"}
+  {service="auth"}
+  {service="producto"} |= "[PRODUCTO]"
+  {service="catalogo"} |= "[CATALOGO]"
+  {service="pedido"}  |= "Pago PENDIENTE registrado"
+  {service="pago"}    |= "Registro de pago"
+
+============================================================
+MERCADO PAGO + YAPE (cobro real en checkout)
+============================================================
+Yape en Perú se integra vía pasarela. Este proyecto usa Mercado Pago (sandbox gratis).
+
+1) Crear cuenta en https://www.mercadopago.com.pe/developers
+2) Crear una aplicación de prueba y copiar:
+   - Public Key (TEST-...)
+   - Access Token (TEST-...)
+3) Configurar en infra/config-repo/pago-dev.yml o variables de entorno:
+   MP_ENABLED=true
+   MP_PUBLIC_KEY=TEST-xxxxxxxx
+   MP_ACCESS_TOKEN=TEST-xxxxxxxx
+   MP_PAYER_EMAIL=tu_email@test.com
+   Si la app de MP se congela en el celular, usa el script:
+   .\scripts\configurar-mercadopago.ps1
+   (abre https://www.mercadopago.com.pe/developers/panel/app en Chrome del PC)
+4) Reiniciar config-server y microservicio pago.
+5) Verificar: GET http://localhost:7091/api/v1/pagos/mercadopago/config
+   Debe responder: { "enabled": true, "publicKey": "TEST-..." }
+
+Pruebas Yape (sandbox Mercado Pago):
+- Documentación: https://www.mercadopago.com.pe/developers/es/docs/checkout-api-payments/integration-configuration/yape
+- En checkout elige Yape, ingresa celular y código OTP de tu app Yape (modo prueba según MP).
+
+Flujo:
+  Frontend genera token con SDK Mercado Pago -> Backend cobra en /api/v1/pagos/mercadopago/yape
+  Si aprueba: pedido PAGADO y pago APROBADO. Si rechaza: pedido queda PENDIENTE.
+
+Otros métodos (tarjeta, Plin, etc.) siguen siendo simulados.
